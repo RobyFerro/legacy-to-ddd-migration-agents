@@ -2,7 +2,26 @@
 
 Reusable Codex setup for incremental migration from legacy architecture to Domain-Driven Design and Clean Architecture.
 
-This repository is also structured as a Codex plugin repository. The plugin manifest lives at `/.codex-plugin/plugin.json`, so installing directly from GitHub targets the repository root.
+This repository is also structured as a Codex plugin marketplace repository. The distributable plugin lives at `plugins/ddd-clean-migration`, and the marketplace entry lives at `/.agents/plugins/marketplace.json`.
+
+## Make It Available In Codex
+
+Add this marketplace to your `~/.codex/config.toml`:
+
+```toml
+[marketplaces.legacy-to-ddd-migration-agents]
+source_type = "git"
+source = "https://github.com/RobyFerro/legacy-to-ddd-migration-agents.git"
+ref = "master"
+```
+
+Then restart Codex. The plugin will appear as `ddd-clean-migration`.
+
+## Repository Layout
+
+- `plugins/ddd-clean-migration/.codex-plugin/plugin.json`: distributable plugin manifest
+- `.agents/plugins/marketplace.json`: marketplace catalog entry for Codex
+- `.codex/` and `skills/`: source content kept at repo root for local development compatibility
 
 ## Includes
 
@@ -43,6 +62,8 @@ To overwrite an existing `AGENTS.md`:
 ```powershell
 .\install-global.ps1
 ```
+
+Both install scripts package content from `plugins/ddd-clean-migration`.
 
 ## First planning prompt
 
