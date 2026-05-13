@@ -2,5 +2,37 @@
   "name": "ddd-clean-migration",
   "version": "1.0.0",
   "description": "Reusable Codex skills for incremental legacy-to-DDD/Clean Architecture migration.",
-  "skills": "./skills/"
+  "author": {
+    "name": "rober",
+    "url": "https://github.com/rober"
+  },
+  "repository": "https://github.com/rober/legacy-to-ddd-migration-agents",
+  "license": "MIT",
+  "keywords": [
+    "ddd",
+    "clean-architecture",
+    "legacy-modernization",
+    "codex",
+    "skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "DDD Clean Migration",
+    "shortDescription": "Codex skills for incremental legacy-to-DDD migration.",
+    "longDescription": "A Codex plugin with reusable skills, agents, and prompts for analyzing legacy systems and planning incremental migration slices toward DDD and Clean Architecture.",
+    "developerName": "rober",
+    "category": "Development",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Planning"
+    ],
+    "websiteURL": "https://github.com/rober/legacy-to-ddd-migration-agents",
+    "defaultPrompt": [
+      "Plan a DDD migration for this bounded context.",
+      "Extract business logic hotspots from this legacy module.",
+      "Design one safe migration slice toward Clean Architecture."
+    ],
+    "brandColor": "#0F766E"
+  }
 }
