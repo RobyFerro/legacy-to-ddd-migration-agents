@@ -2,6 +2,8 @@
 
 Reusable Codex setup for incremental migration from legacy architecture to Domain-Driven Design and Clean Architecture.
 
+This repository is also structured as a Codex plugin repository. The plugin manifest lives at `/.codex-plugin/plugin.json`, so installing directly from GitHub targets the repository root.
+
 ## Includes
 
 - 3 custom Codex agents

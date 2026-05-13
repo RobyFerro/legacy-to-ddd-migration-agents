@@ -8,7 +8,7 @@
             "name": "ddd-clean-migration",
             "source": {
                 "source": "local",
-                "path": "./plugins/ddd-clean-migration"
+                "path": "."
             },
             "policy": {
                 "installation": "AVAILABLE",
