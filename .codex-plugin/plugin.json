@@ -1,0 +1,6 @@
+{
+  "name": "ddd-clean-migration",
+  "version": "1.0.0",
+  "description": "Reusable Codex skills for incremental legacy-to-DDD/Clean Architecture migration.",
+  "skills": "./skills/"
+}
