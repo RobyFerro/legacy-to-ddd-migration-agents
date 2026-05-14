@@ -33,6 +33,8 @@ Create the next slice artifact folder:
 Usa legacy-discovery con legacy-business-logic-extraction.
 Esegui una broad discovery dell'intero sistema legacy.
 Identifica candidate bounded context, relazioni, dipendenze e hotspot.
+Mostra sempre la possibilita' di avviare deep discovery dedicate per BC.
+Decidi tu se delegare subito o rinviare la delega in base alla stabilita' dei confini.
 Aggiorna:
 - migration/migration-project.yaml
 - migration/00-system/bounded-context-catalog.md
@@ -49,6 +51,20 @@ Aggiorna:
 - migration/bounded-contexts/[slug]/01-discovery/discovery.md
 - migration/bounded-contexts/[slug]/01-discovery/discovery.yaml
 Riporta ipotesi esplicite con confidence quando il codice non e' chiaro.
+```
+
+## Parallel BC Deep Discovery
+
+```text
+Dopo la broad discovery, valuta ogni bounded context candidato.
+Mostra sempre l'opzione di lanciare agenti legacy-discovery dedicati.
+Delega solo i BC con confini abbastanza stabili.
+Se la partizione e' ancora instabile, spiega perche' continui la discovery in modo centralizzato.
+Per ogni BC candidato riporta:
+- responsabilita'
+- segnali/evidenze
+- focus suggerito per la deep discovery
+- precondizioni o dubbi aperti
 ```
 
 ## Design
@@ -107,6 +123,7 @@ Aggiorna migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/v
 ```text
 Pianifica la migrazione broad-to-specific del bounded context [Name].
 Se manca, esegui prima la broad discovery del sistema.
+Se emergono piu' BC candidati, valuta se avviare deep discovery parallela solo per quelli abbastanza stabili.
 ```
 
 Expected workflow:

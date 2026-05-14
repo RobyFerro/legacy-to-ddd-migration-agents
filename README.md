@@ -9,8 +9,9 @@ This repository is also a Codex plugin marketplace repository. The distributable
 The plugin guides the team through three phases:
 
 1. broad discovery of the legacy system to identify candidate bounded contexts and a simple context map
-2. deep discovery, DDD design, and migration planning for one bounded context at a time
-3. implementation of approved migration slices in a new project created inside the same repository, or in a lighter safe area when explicitly preferred
+2. optional per-bounded-context deep discovery delegation, coordinated by the main agent when the candidate partition is stable enough
+3. deep discovery, DDD design, and migration planning for one bounded context at a time
+4. implementation of approved migration slices in a new project created inside the same repository, or in a lighter safe area when explicitly preferred
 
 The process is evidence-based and traceable. Discovery and design artifacts must cite concrete legacy paths, methods, queries, and modules.
 
@@ -120,12 +121,25 @@ Default mode creates a standalone new project area for migrated bounded contexts
 .\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "C:\path\to\target-repo"
 ```
 
+This command creates the migration workspace only.
+The Clean Architecture layer folders are scaffolded only when you also provide `-BoundedContextName`.
+
 Optional: scaffold the artifact folder for a first bounded context.
 
 ```powershell
 .\.codex\scripts\initialize-migration-workspace.ps1 `
   -TargetRepo "C:\path\to\target-repo" `
   -BoundedContextName "Billing"
+```
+
+With `-BoundedContextName`, the plugin also creates the target implementation structure for that bounded context:
+
+```text
+migration/new-projects/billing/src/
+  Domain/
+  Application/
+  Infrastructure/
+  Presentation/
 ```
 
 If you explicitly want the lighter strangler-style safe area instead of a standalone project:
@@ -135,6 +149,16 @@ If you explicitly want the lighter strangler-style safe area instead of a standa
   -TargetRepo "C:\path\to\target-repo" `
   -BoundedContextName "Billing" `
   -ImplementationMode SafeArea
+```
+
+In `SafeArea` mode the same layer structure is created under:
+
+```text
+migration/safe-area/billing/src/
+  Domain/
+  Application/
+  Infrastructure/
+  Presentation/
 ```
 
 To create the next implementation slice artifact folder automatically:
@@ -148,11 +172,13 @@ To create the next implementation slice artifact folder automatically:
 ## Broad-To-Specific Workflow
 
 1. Run a broad system discovery to identify candidate bounded contexts and a simple context map.
-2. Select one bounded context.
-3. Run deep discovery for that bounded context.
-4. Produce DDD/Clean design and migration slices.
-5. Implement only the approved slice in the standalone new project by default, or in the safe area when explicitly chosen.
-6. Validate architectural boundaries, preserved behavior, and traceability.
+2. Always present the option to launch dedicated deep-discovery agents for the detected bounded contexts.
+3. Let the main agent decide whether delegation is appropriate or should be deferred because boundaries are still unstable.
+4. Select one bounded context.
+5. Run deep discovery for that bounded context.
+6. Produce DDD/Clean design and migration slices.
+7. Implement only the approved slice in the standalone new project by default, or in the safe area when explicitly chosen.
+8. Validate architectural boundaries, preserved behavior, and traceability.
 
 Implementation should create one artifact folder per slice, for example:
 
@@ -170,6 +196,7 @@ migration/bounded-contexts/billing/04-implementation/slices/slice-001/
 Inizializza il workspace di migrazione se manca.
 Usa la modalita' new-project come default.
 Esegui una broad discovery del sistema legacy per identificare bounded context candidati e relazioni.
+Valuta se la partizione e' abbastanza stabile da delegare deep discovery parallela per BC.
 Poi prepara la deep discovery del bounded context [Name].
 ```
 
@@ -181,4 +208,4 @@ APPROVED: implement this migration slice
 
 ## Recommended Usage
 
-Plan the whole bounded context, but implement only one migration slice at a time. Keep the system-level context map current while the per-bounded-context artifacts evolve.
+Plan the whole bounded context, but implement only one migration slice at a time. Keep the system-level context map current while the per-bounded-context artifacts evolve. During discovery, the main agent should always expose the optional per-BC deep-discovery step, but it must defer delegation when the candidate boundaries are still unstable.

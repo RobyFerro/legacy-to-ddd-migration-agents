@@ -11,11 +11,12 @@ The migration must follow this workflow:
 
 1. Broad discovery of the whole legacy system
 2. Identification of candidate bounded contexts and their simple relationship map
-3. Selection of one bounded context
-4. Deep discovery of the selected bounded context
-5. DDD design and migration planning for that bounded context
-6. Implementation of one approved migration slice in the safe area
-7. Validation and artifact update
+3. Delegation decision for per-bounded-context deep discovery
+4. Selection of one bounded context
+5. Deep discovery of the selected bounded context
+6. DDD design and migration planning for that bounded context
+7. Implementation of one approved migration slice in the safe area
+8. Validation and artifact update
 
 Do not implement code before broad discovery, bounded-context design, and migration planning have been completed for the selected scope.
 
@@ -28,6 +29,10 @@ Use the appropriate agent depending on the task:
 - Use `clean-migration-worker` to implement one small migration step at a time.
 
 If the user does not explicitly specify the agent, choose the safest agent for the current phase.
+
+During broad discovery, the main agent remains responsible for identifying candidate bounded contexts and deciding whether per-bounded-context deep discovery can be delegated safely.
+The system may always offer the option to launch dedicated discovery agents for the detected bounded contexts.
+The main agent must decline or defer delegation when the partition is still unstable.
 
 ## General Principles
 
@@ -229,12 +234,15 @@ Example user request:
 This request must trigger the following workflow:
 
 1. Use the `legacy-discovery` agent with the `legacy-business-logic-extraction` skill for broad discovery if the system map is missing or stale.
-2. Use the `legacy-discovery` agent again for deep bounded-context discovery.
-3. Use the `ddd-design` agent with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
-4. Use the `clean-migration-worker` agent with the `migration-slice-planning` skill for planning only.
-5. Stop before implementation unless the user explicitly approves a selected slice.
-6. After approval, use the `clean-migration-worker` agent with `clean-architecture-boundaries` for implementation in the safe area.
-7. After implementation, use the `clean-migration-worker` agent with `architecture-validation`.
+2. After broad discovery, decide whether per-bounded-context deep discovery can be delegated safely.
+3. If the partition is stable enough, optionally launch dedicated `legacy-discovery` agents for the candidate bounded contexts that have sufficient signal.
+4. If the partition is unstable, continue centralized discovery and explicitly explain why delegation is deferred.
+5. Use the `legacy-discovery` agent again for deep bounded-context discovery of the selected bounded context.
+6. Use the `ddd-design` agent with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
+7. Use the `clean-migration-worker` agent with the `migration-slice-planning` skill for planning only.
+8. Stop before implementation unless the user explicitly approves a selected slice.
+9. After approval, use the `clean-migration-worker` agent with `clean-architecture-boundaries` for implementation in the safe area.
+10. After implementation, use the `clean-migration-worker` agent with `architecture-validation`.
 
 ### Planning Requests
 
@@ -251,6 +259,8 @@ For planning requests:
 
 - initialize the migration workspace if missing
 - use `legacy-discovery` for broad discovery when needed
+- always present the option to deepen discovery with dedicated per-BC agents after candidate BCs are identified
+- let the main agent decide whether delegation is appropriate based on boundary stability
 - use `legacy-discovery` again for the selected bounded context
 - then use `ddd-design`
 - then use `clean-migration-worker` only for migration planning
@@ -264,6 +274,7 @@ For planning requests:
   - `migration/00-system/bounded-context-catalog.md`
   - `migration/00-system/bounded-context-catalog.yaml`
   - `migration/00-system/context-map.md`
+  - delegation recommendation for per-BC deep discovery, including why delegation is recommended or deferred
   - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
   - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.yaml`
   - `migration/bounded-contexts/<bounded-context-slug>/02-design/design.md`
@@ -301,6 +312,7 @@ At the end of a planning request, Codex must summarize:
 - agents used
 - skills used
 - discovery outcome
+- delegation decision for per-BC deep discovery
 - DDD/Clean design outcome
 - migration slices identified
 - recommended first slice

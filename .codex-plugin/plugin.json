@@ -1,7 +1,7 @@
 {
   "name": "ddd-clean-migration",
-  "version": "1.0.0",
-  "description": "Reusable Codex skills for incremental legacy-to-DDD/Clean Architecture migration.",
+  "version": "1.2.0",
+  "description": "Reusable Codex workflow for broad-to-specific legacy-to-DDD/Clean Architecture migration with guided per-bounded-context discovery delegation.",
   "author": {
     "name": "Roberto Ferro",
     "url": "https://github.com/RobyFerro"
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "DDD Clean Migration",
-    "shortDescription": "Codex skills for incremental legacy-to-DDD migration.",
-    "longDescription": "A Codex plugin with reusable skills, agents, and prompts for analyzing legacy systems and planning incremental migration slices toward DDD and Clean Architecture.",
+    "shortDescription": "Codex workflow for guided legacy-to-DDD migration.",
+    "longDescription": "A Codex plugin with reusable skills, agents, prompts, and templates for broad discovery, optional per-bounded-context deep-discovery delegation, DDD design, and incremental migration-slice planning toward Clean Architecture.",
     "developerName": "Roberto Ferro",
     "category": "Development",
     "capabilities": [
@@ -30,7 +30,7 @@
     ],
     "websiteURL": "https://github.com/RobyFerro/legacy-to-ddd-migration-agents",
     "defaultPrompt": [
-      "Plan a DDD migration for this bounded context.",
+      "Map candidate bounded contexts, then decide whether per-BC deep discovery should be delegated.",
       "Extract business logic hotspots from this legacy module.",
       "Design one safe migration slice toward Clean Architecture."
     ],

@@ -112,6 +112,12 @@ if ($BoundedContextName) {
         Copy-TemplateFile (Join-Path $templateRoot "new-projects\\bounded-context-project\\src\\README.md") (Join-Path $bcProjectRoot "src\\README.md")
         Copy-TemplateFile (Join-Path $templateRoot "new-projects\\bounded-context-project\\tests\\README.md") (Join-Path $bcProjectRoot "tests\\README.md")
     }
+
+    Write-Host "Clean Architecture layers scaffolded for bounded context '$slug'."
+    Write-Host "Layers: Domain, Application, Infrastructure, Presentation"
+} else {
+    Write-Host "Migration workspace created without a bounded context scaffold."
+    Write-Host "To generate Clean Architecture layers, rerun with -BoundedContextName <Name>."
 }
 
 Write-Host "Migration workspace ready at $migrationPath using implementation mode $ImplementationMode"

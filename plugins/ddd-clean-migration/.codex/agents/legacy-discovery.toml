@@ -110,6 +110,10 @@ For each candidate Bounded Context, report:
 - Open questions
 - Hypotheses, when direct evidence is incomplete
 
+When scope is the whole system, also decide whether per-bounded-context deep discovery can already be delegated safely.
+The system may always show the option to launch dedicated deep-discovery agents, but you must recommend delegation only when the partition is stable enough.
+If boundaries are still unstable, explicitly recommend against delegation for now and explain why.
+
 # Business Logic Discovery
 
 Treat all of the following as possible business logic:
@@ -275,6 +279,35 @@ Use a table:
 ### Recommended Next Step
 
 Recommend the smallest next scope for DDD design.
+
+### Delegation Recommendation
+
+Use a table:
+
+| Decision | Stability | Candidate BCs To Delegate | Reasoning | BCs To Keep Centralized |
+|---|---|---|---|---|
+
+Rules:
+
+- Always include this section for whole-system discovery.
+- `Decision` must be one of `Delegate now`, `Defer delegation`.
+- `Stability` must be one of `Stable`, `Partially stable`, `Unstable`.
+- Recommend `Delegate now` only when at least some candidate BCs have sufficiently stable boundaries.
+- When recommending delegation, identify only the BCs with enough signal for dedicated deep discovery.
+- When recommending deferral, explain what ambiguity or overlap prevents safe partitioning.
+
+### Per-BC Deep Discovery Briefs
+
+Use a table:
+
+| Candidate BC | Responsibility | Why Deep Discovery Helps | Suggested Focus | Preconditions / Open Questions |
+|---|---|---|---|---|
+
+Rules:
+
+- Always include this section for whole-system discovery.
+- Include all candidate BCs, even if some are not ready for delegation yet.
+- Mark ambiguous BCs through the `Preconditions / Open Questions` column instead of forcing a premature delegation.
 
 When producing structured side artifacts, also emit a machine-readable YAML version of the bounded-context catalog with:
 
