@@ -1,4 +1,4 @@
-# Validation Report
+# Slice Validation Report
 
 ## Scope
 
@@ -13,8 +13,6 @@
 ## Tests
 
 ## Build Result
-
-## Traceability
 
 ## Risks
 

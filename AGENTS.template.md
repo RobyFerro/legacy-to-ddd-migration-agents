@@ -134,7 +134,20 @@ System-level artifacts should live under `migration/00-system/`.
 
 Per-bounded-context artifacts should live under `migration/bounded-contexts/<bounded-context-slug>/`.
 
-Safe-area implementation code should live under `migration/safe-area/`.
+Per-bounded-context artifacts should be organized by phase:
+
+- `01-discovery/`
+- `02-design/`
+- `03-planning/`
+- `04-implementation/`
+
+Implementation artifacts should be organized by slice under:
+
+- `04-implementation/slices/<slice-id>/`
+
+Standalone migration projects should live under `migration/new-projects/`.
+
+Safe-area implementation code may live under `migration/safe-area/` only when that mode is explicitly chosen.
 
 Keep artifacts updated as the migration evolves.
 
@@ -163,7 +176,9 @@ During implementation:
 - Keep public contracts stable unless the migration explicitly requires adapters.
 - Add tests around moved business rules whenever possible.
 - Prefer introducing seams and adapters over big-bang rewrites.
-- Implement inside `migration/safe-area/` unless the selected slice explicitly requires a thin integration seam in the legacy code.
+- Prefer implementation inside `migration/new-projects/`.
+- Use `migration/safe-area/` only when the migration strategy explicitly chooses a strangler-style internal target.
+- Touch legacy code only through thin seams when a standalone project is the chosen target.
 
 ## Validation Rules
 
@@ -191,8 +206,8 @@ Recommended skill usage:
 | Deep bounded-context discovery | `legacy-discovery` | `legacy-business-logic-extraction` |
 | DDD design | `ddd-design` | `ddd-aggregate-design`, `clean-architecture-boundaries` |
 | Migration planning | `clean-migration-worker` | `migration-slice-planning`, `clean-architecture-boundaries` |
-| Implementation | `clean-migration-worker` | `clean-architecture-boundaries` |
-| Validation | `clean-migration-worker` | `architecture-validation` |
+| Implementation | `clean-migration-worker` | `clean-architecture-boundaries`, `migration-code-guardrails` |
+| Validation | `clean-migration-worker` | `architecture-validation`, `migration-code-guardrails` |
 
 ### Skill Rules
 
@@ -200,6 +215,7 @@ Recommended skill usage:
 - Use `ddd-aggregate-design` when evaluating aggregates, aggregate roots, entities, value objects, invariants, and consistency boundaries.
 - Use `clean-architecture-boundaries` when deciding whether a responsibility belongs to Domain, Application, Infrastructure, or Presentation.
 - Use `migration-slice-planning` before implementation to split large scopes into small, safe, reversible migration slices.
+- Use `migration-code-guardrails` during implementation and review to enforce selective coding guardrails: boundary separation, domain-specific naming, command-query separation, and explicit orchestration.
 - Use `architecture-validation` after implementation to validate scope, diff, layer dependencies, behavior preservation, tests, and risks.
 
 ## Mandatory Agent Workflow For Bounded Context Migration
@@ -248,11 +264,11 @@ For planning requests:
   - `migration/00-system/bounded-context-catalog.md`
   - `migration/00-system/bounded-context-catalog.yaml`
   - `migration/00-system/context-map.md`
-  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
-  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery.yaml`
-  - `migration/bounded-contexts/<bounded-context-slug>/02-design.md`
-  - `migration/bounded-contexts/<bounded-context-slug>/02-model.yaml`
-  - `migration/bounded-contexts/<bounded-context-slug>/03-migration-plan.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.yaml`
+  - `migration/bounded-contexts/<bounded-context-slug>/02-design/design.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/02-design/model.yaml`
+  - `migration/bounded-contexts/<bounded-context-slug>/03-planning/migration-plan.md`
 
 ### Implementation Requests
 
@@ -269,10 +285,13 @@ Implementation rules:
 - preserve legacy behavior
 - do not perform unrelated refactoring
 - keep public contracts unchanged unless explicitly planned
-- prefer implementation inside `migration/safe-area/`
+- prefer implementation inside `migration/new-projects/`
+- use `migration/safe-area/` only when explicitly selected
 - produce or update:
-  - `migration/bounded-contexts/<bounded-context-slug>/04-implementation-notes.md`
-  - `migration/bounded-contexts/<bounded-context-slug>/05-validation.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/slice.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/traceability.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/validation.md`
+  - optionally `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/handoff.md`
 
 ### Required Final Response For Planning
 
@@ -309,10 +328,11 @@ The expected reports are:
 - `migration/00-system/bounded-context-catalog.md`
 - `migration/00-system/bounded-context-catalog.yaml`
 - `migration/00-system/context-map.md`
-- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
-- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.yaml`
-- `migration/bounded-contexts/<bounded-context-slug>/02-design.md`
-- `migration/bounded-contexts/<bounded-context-slug>/02-model.yaml`
-- `migration/bounded-contexts/<bounded-context-slug>/03-migration-plan.md`
-- `migration/bounded-contexts/<bounded-context-slug>/04-implementation-notes.md`
-- `migration/bounded-contexts/<bounded-context-slug>/05-validation.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.yaml`
+- `migration/bounded-contexts/<bounded-context-slug>/02-design/design.md`
+- `migration/bounded-contexts/<bounded-context-slug>/02-design/model.yaml`
+- `migration/bounded-contexts/<bounded-context-slug>/03-planning/migration-plan.md`
+- `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/slice.md`
+- `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/traceability.md`
+- `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/validation.md`

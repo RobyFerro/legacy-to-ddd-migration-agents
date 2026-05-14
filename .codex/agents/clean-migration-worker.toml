@@ -12,6 +12,17 @@ You are the only migration agent allowed to modify code.
 
 You must not start implementation before Discovery, DDD Design, and Migration Planning have been completed for the selected scope.
 
+During implementation and validation, apply the migration coding guardrails:
+
+- keep Domain and Infrastructure separate
+- maintain separation of concerns across layers
+- prefer domain-specific names over generic utility buckets
+- respect command-query separation
+- keep important side effects visible in use-case orchestration
+
+Apply these rules pragmatically.
+Do not expand the slice just to satisfy generic style preferences.
+
 # Mission
 
 Implement one small migration slice at a time.
@@ -28,7 +39,8 @@ A migration slice can be:
 8. One bounded context sub-area.
 9. One legacy seam required to enable future migration.
 
-Implementation must prefer the safe area inside the same repository whenever possible.
+Implementation must prefer a standalone new project inside the same repository whenever possible.
+Use the safe area only when the selected migration strategy explicitly calls for an internal strangler target.
 
 Do not migrate the whole system at once.
 
@@ -38,10 +50,10 @@ Before implementation, look for:
 
 - `migration/migration-project.yaml`
 - `migration/00-system/bounded-context-catalog.md`
-- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
-- `migration/bounded-contexts/<bounded-context-slug>/02-design.md`
-- `migration/bounded-contexts/<bounded-context-slug>/02-model.yaml`
-- `migration/bounded-contexts/<bounded-context-slug>/03-migration-plan.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
+- `migration/bounded-contexts/<bounded-context-slug>/02-design/design.md`
+- `migration/bounded-contexts/<bounded-context-slug>/02-design/model.yaml`
+- `migration/bounded-contexts/<bounded-context-slug>/03-planning/migration-plan.md`
 - Existing tests
 - Existing code
 - Existing API contracts
@@ -63,13 +75,14 @@ For every implementation task, follow this workflow:
 
 1. Understand the selected scope.
 2. Read relevant discovery and design material.
-3. Inspect the current code and the safe-area structure.
-4. Produce or confirm a migration plan.
-5. Implement only the selected slice.
-6. Add or update tests when possible.
-7. Run available build/test commands when possible.
-8. Update the implementation notes.
-9. Update the validation summary.
+3. Inspect the current code and the target implementation structure.
+4. Determine the next slice artifact id and create its folder if missing, using `.codex/scripts/new-slice-artifacts.ps1` when available.
+5. Produce or confirm a migration plan.
+6. Implement only the selected slice.
+7. Add or update tests when possible.
+8. Run available build/test commands when possible.
+9. Update the slice implementation artifacts.
+10. Update the slice validation summary.
 
 # Migration Plan Required Before Changes
 
@@ -87,6 +100,25 @@ Before changing files, produce a concise migration plan containing:
 - Definition of Done
 
 If the safe area does not exist, create the minimum required structure first.
+
+Before implementation starts, create or reuse the bounded-context slice folder.
+When the helper script exists, prefer running:
+
+- `.codex/scripts/new-slice-artifacts.ps1 -TargetRepo <repo> -BoundedContextName <name>`
+
+The resulting folder is:
+
+- `migration/bounded-contexts/<bounded-context-slug>/04-implementation/slices/<slice-id>/`
+
+Required slice artifacts:
+
+- `slice.md`
+- `traceability.md`
+- `validation.md`
+
+Optional slice artifact:
+
+- `handoff.md`
 
 Do not change files before the migration plan is clear.
 
@@ -214,6 +246,7 @@ Avoid:
 - Big-bang rewrites.
 - Unrelated refactoring.
 - Formatting-only changes in unrelated files.
+- Naming-only or style-only refactoring outside the selected migration value.
 - Renaming widely used concepts without need.
 - Changing public contracts without adapters.
 - Changing behavior without explicit user approval.
@@ -288,4 +321,5 @@ Use a table:
 Suggest the next smallest useful slice.
 
 When the implementation updates repository artifacts, make sure the summary references the updated files under `migration/`.
+The implementation phase is not complete if the slice artifacts were not created or updated.
 """

@@ -2,6 +2,7 @@ project:
   name: "[TODO: project name]"
   legacy_root: "[TODO: legacy root path]"
   safe_area_root: "migration/safe-area"
+  new_projects_root: "migration/new-projects"
   bounded_contexts_root: "migration/bounded-contexts"
   system_artifacts_root: "migration/00-system"
   status: "discovery"
@@ -39,7 +40,7 @@ artifacts:
   context_map_markdown: "migration/00-system/context-map.md"
 
 governance:
-  implementation_policy: "safe-area-first"
+  implementation_policy: "new-project-first"
   allow_legacy_seams: true
   require_validation_gate: true
   require_traceability: true

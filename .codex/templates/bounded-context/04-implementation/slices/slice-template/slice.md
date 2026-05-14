@@ -1,6 +1,10 @@
-# Implementation Summary
+# Slice Implementation Summary
+
+## Slice Id
 
 ## Scope
+
+## Source Plan Reference
 
 ## Files Changed
 
@@ -15,11 +19,6 @@
 ## Architecture Impact
 
 ## Tests
-
-## Validation
-
-| Check | Result | Notes |
-|---|---|---|
 
 ## Remaining Risks
 

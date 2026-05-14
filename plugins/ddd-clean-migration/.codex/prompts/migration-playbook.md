@@ -6,13 +6,25 @@ Use these short prompts from the repository root.
 
 ```text
 Se il workspace di migrazione non esiste, crea la struttura standard sotto migration/
-usando il template del progetto e una safe area nella stessa repository.
+usando il template del progetto e creando un nuovo progetto nella stessa repository come target di default.
 ```
 
 Suggested command:
 
 ```powershell
 .\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "<repo-path>"
+```
+
+Optional strangler-style alternative:
+
+```powershell
+.\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "<repo-path>" -ImplementationMode SafeArea
+```
+
+Create the next slice artifact folder:
+
+```powershell
+.\.codex\scripts\new-slice-artifacts.ps1 -TargetRepo "<repo-path>" -BoundedContextName "<BC Name>"
 ```
 
 ## Broad Discovery
@@ -34,8 +46,8 @@ Aggiorna:
 Usa legacy-discovery con legacy-business-logic-extraction.
 Analizza il bounded context [SCOPE] in profondita' in modalita' read-only.
 Aggiorna:
-- migration/bounded-contexts/[slug]/01-discovery.md
-- migration/bounded-contexts/[slug]/01-discovery.yaml
+- migration/bounded-contexts/[slug]/01-discovery/discovery.md
+- migration/bounded-contexts/[slug]/01-discovery/discovery.yaml
 Riporta ipotesi esplicite con confidence quando il codice non e' chiaro.
 ```
 
@@ -46,8 +58,8 @@ Usa ddd-design con ddd-aggregate-design e clean-architecture-boundaries.
 Progetta DDD/Clean per [SCOPE].
 Non modificare codice.
 Aggiorna:
-- migration/bounded-contexts/[slug]/02-design.md
-- migration/bounded-contexts/[slug]/02-model.yaml
+- migration/bounded-contexts/[slug]/02-design/design.md
+- migration/bounded-contexts/[slug]/02-design/model.yaml
 - migration/migration-project.yaml
 ```
 
@@ -58,7 +70,7 @@ Usa clean-migration-worker con migration-slice-planning.
 Crea solo il migration plan per [SCOPE].
 Non modificare codice.
 Dividi il lavoro in slice piccoli e consigliami il primo.
-Aggiorna migration/bounded-contexts/[slug]/03-migration-plan.md.
+Aggiorna migration/bounded-contexts/[slug]/03-planning/migration-plan.md.
 ```
 
 ## Implementation
@@ -70,10 +82,15 @@ Usa clean-migration-worker con clean-architecture-boundaries.
 Implementa solo lo slice approvato.
 Non ampliare scope.
 Preserva comportamento legacy.
-Lavora principalmente dentro migration/safe-area/.
+Lavora principalmente dentro migration/new-projects/.
+Usa migration/safe-area/ solo se la strategia scelta lo richiede esplicitamente.
+Determina il prossimo slice-id e crea la relativa cartella artefatti se manca.
+Puoi usare .\.codex\scripts\new-slice-artifacts.ps1 per automatizzare questo step.
 Aggiorna:
-- migration/bounded-contexts/[slug]/04-implementation-notes.md
-- migration/bounded-contexts/[slug]/05-validation.md
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/slice.md
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/traceability.md
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/validation.md
+- opzionalmente migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/handoff.md
 ```
 
 ## Validation
@@ -82,7 +99,7 @@ Aggiorna:
 Usa clean-migration-worker con architecture-validation.
 Valida lo slice appena implementato.
 Non modificare codice.
-Aggiorna migration/bounded-contexts/[slug]/05-validation.md.
+Aggiorna migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/validation.md.
 ```
 
 ## Bounded Context Planning

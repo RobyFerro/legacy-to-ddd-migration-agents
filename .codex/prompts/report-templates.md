@@ -14,13 +14,15 @@ The canonical templates are file-based and live under `.codex/templates/`.
 
 ## Per-Bounded-Context Artifacts
 
-- `bounded-context/01-discovery.md`
-- `bounded-context/01-discovery.yaml`
-- `bounded-context/02-design.md`
-- `bounded-context/02-model.yaml`
-- `bounded-context/03-migration-plan.md`
-- `bounded-context/04-implementation-notes.md`
-- `bounded-context/05-validation.md`
+- `bounded-context/01-discovery/discovery.md`
+- `bounded-context/01-discovery/discovery.yaml`
+- `bounded-context/02-design/design.md`
+- `bounded-context/02-design/model.yaml`
+- `bounded-context/03-planning/migration-plan.md`
+- `bounded-context/04-implementation/slices/<slice-id>/slice.md`
+- `bounded-context/04-implementation/slices/<slice-id>/traceability.md`
+- `bounded-context/04-implementation/slices/<slice-id>/validation.md`
+- `bounded-context/04-implementation/slices/<slice-id>/handoff.md`
 
 ## Safe Area
 
