@@ -38,7 +38,7 @@ The plugin scaffolds and maintains:
 - `plugins/ddd-clean-migration/scripts/`: bundled helper scripts
 - `install-global.ps1`, `install-project.ps1`, `update-global-clean.ps1`: repository-level install helpers
 
-## Bundled Agents
+## Bundled Agent Profiles
 
 - `legacy-discovery`
 - `ddd-design`
@@ -52,6 +52,18 @@ The plugin scaffolds and maintains:
 - `migration-slice-planning`
 - `architecture-validation`
 - `migration-code-guardrails`
+
+## Subagent Runtime Note
+
+As of May 14, 2026, Codex Desktop exposes built-in `spawn_agent` roles such as `explorer` and `worker`.
+
+In this kit, `legacy-discovery`, `ddd-design`, and `clean-migration-worker` should therefore be treated as project agent profiles, not as guaranteed `agent_type` values.
+
+Recommended delegation mapping:
+
+- `legacy-discovery` -> `explorer` + `legacy-business-logic-extraction`
+- `ddd-design` -> `explorer` + `ddd-aggregate-design` + `clean-architecture-boundaries`
+- `clean-migration-worker` -> `worker` + the phase-appropriate migration skill
 
 ## Selected Coding Guardrails
 
@@ -102,12 +114,13 @@ Use the clean update when you want to avoid stale files from previous versions u
 
 This installs:
 
-- `.codex/agents`
 - `.codex/skills`
 - `.codex/prompts`
 - `.codex/templates`
 - `.codex/scripts`
 - `AGENTS.md`
+
+The repository does not rely on project-local `.codex/agents` for delegation because current Codex Desktop runtimes use built-in subagent roles instead.
 
 To overwrite an existing `AGENTS.md`:
 
@@ -150,7 +163,7 @@ Create the next slice artifact folder:
 ### Broad Discovery
 
 ```text
-Usa legacy-discovery con legacy-business-logic-extraction.
+Usa il profilo `legacy-discovery` tramite un subagent `explorer` con `legacy-business-logic-extraction`.
 Esegui una broad discovery dell'intero sistema legacy.
 Identifica candidate bounded context, relazioni, dipendenze e hotspot.
 Mostra sempre la possibilita' di avviare deep discovery dedicate per BC.
@@ -165,7 +178,7 @@ Aggiorna:
 ### Deep Discovery
 
 ```text
-Usa legacy-discovery con legacy-business-logic-extraction.
+Usa il profilo `legacy-discovery` tramite un subagent `explorer` con `legacy-business-logic-extraction`.
 Analizza il bounded context [SCOPE] in profondita' in modalita' read-only.
 Aggiorna:
 - migration/bounded-contexts/[slug]/01-discovery/discovery.md
@@ -177,7 +190,7 @@ Riporta ipotesi esplicite con confidence quando il codice non e' chiaro.
 
 ```text
 Dopo la broad discovery, valuta ogni bounded context candidato.
-Mostra sempre l'opzione di lanciare agenti legacy-discovery dedicati.
+Mostra sempre l'opzione di lanciare subagent `explorer` dedicati che operano con il profilo `legacy-discovery`.
 Delega solo i BC con confini abbastanza stabili.
 Se la partizione e' ancora instabile, spiega perche' continui la discovery in modo centralizzato.
 Per ogni BC candidato riporta:
@@ -190,7 +203,7 @@ Per ogni BC candidato riporta:
 ### Design
 
 ```text
-Usa ddd-design con ddd-aggregate-design e clean-architecture-boundaries.
+Usa il profilo `ddd-design` tramite un subagent `explorer` con `ddd-aggregate-design` e `clean-architecture-boundaries`.
 Progetta DDD/Clean per [SCOPE].
 Non modificare codice.
 Aggiorna:
@@ -202,7 +215,7 @@ Aggiorna:
 ### Migration Plan
 
 ```text
-Usa clean-migration-worker con migration-slice-planning.
+Usa il profilo `clean-migration-worker` tramite un subagent `worker` con `migration-slice-planning`.
 Crea solo il migration plan per [SCOPE].
 Non modificare codice.
 Dividi il lavoro in slice piccoli e consigliami il primo.
@@ -214,7 +227,7 @@ Aggiorna migration/bounded-contexts/[slug]/03-planning/migration-plan.md.
 ```text
 APPROVED: implement this migration slice
 
-Usa clean-migration-worker con clean-architecture-boundaries.
+Usa il profilo `clean-migration-worker` tramite un subagent `worker` con `clean-architecture-boundaries`.
 Implementa solo lo slice approvato.
 Non ampliare scope.
 Preserva comportamento legacy.
@@ -232,7 +245,7 @@ Aggiorna:
 ### Validation
 
 ```text
-Usa clean-migration-worker con architecture-validation.
+Usa il profilo `clean-migration-worker` tramite un subagent `worker` con `architecture-validation`.
 Valida lo slice appena implementato.
 Non modificare codice.
 Aggiorna migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/validation.md.

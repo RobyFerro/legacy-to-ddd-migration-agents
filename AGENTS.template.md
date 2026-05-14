@@ -22,11 +22,18 @@ Do not implement code before broad discovery, bounded-context design, and migrat
 
 ## Agent Usage
 
-Use the appropriate agent depending on the task:
+Use the appropriate project agent profile depending on the task:
 
 - Use `legacy-discovery` to analyze the legacy repository and extract business knowledge.
 - Use `ddd-design` to transform the discovered knowledge into a DDD + Clean Architecture model.
 - Use `clean-migration-worker` to implement one small migration step at a time.
+
+Codex may not expose these profile names as direct `spawn_agent.agent_type` values.
+When delegating, prefer this runtime mapping unless the current Codex build explicitly supports the custom type:
+
+- `legacy-discovery` -> `explorer` plus `legacy-business-logic-extraction`
+- `ddd-design` -> `explorer` plus `ddd-aggregate-design` and `clean-architecture-boundaries`
+- `clean-migration-worker` -> `worker` plus the phase-appropriate migration skill
 
 If the user does not explicitly specify the agent, choose the safest agent for the current phase.
 
@@ -233,16 +240,16 @@ Example user request:
 
 This request must trigger the following workflow:
 
-1. Use the `legacy-discovery` agent with the `legacy-business-logic-extraction` skill for broad discovery if the system map is missing or stale.
+1. Use the `legacy-discovery` profile with the `legacy-business-logic-extraction` skill for broad discovery if the system map is missing or stale.
 2. After broad discovery, decide whether per-bounded-context deep discovery can be delegated safely.
-3. If the partition is stable enough, optionally launch dedicated `legacy-discovery` agents for the candidate bounded contexts that have sufficient signal.
+3. If the partition is stable enough, optionally launch dedicated subagents that act as `legacy-discovery` for the candidate bounded contexts that have sufficient signal.
 4. If the partition is unstable, continue centralized discovery and explicitly explain why delegation is deferred.
-5. Use the `legacy-discovery` agent again for deep bounded-context discovery of the selected bounded context.
-6. Use the `ddd-design` agent with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
-7. Use the `clean-migration-worker` agent with the `migration-slice-planning` skill for planning only.
+5. Use the `legacy-discovery` profile again for deep bounded-context discovery of the selected bounded context.
+6. Use the `ddd-design` profile with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
+7. Use the `clean-migration-worker` profile with the `migration-slice-planning` skill for planning only.
 8. Stop before implementation unless the user explicitly approves a selected slice.
-9. After approval, use the `clean-migration-worker` agent with `clean-architecture-boundaries` for implementation in the safe area.
-10. After implementation, use the `clean-migration-worker` agent with `architecture-validation`.
+9. After approval, use the `clean-migration-worker` profile with `clean-architecture-boundaries` for implementation in the safe area.
+10. After implementation, use the `clean-migration-worker` profile with `architecture-validation`.
 
 ### Planning Requests
 

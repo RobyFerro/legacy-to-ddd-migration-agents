@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$sourceRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sourceRoot = Split-Path -Parent $scriptRoot
 $pluginRoot = Join-Path $sourceRoot "plugins\\ddd-clean-migration"
 $codexHome = "$HOME\.codex"
 

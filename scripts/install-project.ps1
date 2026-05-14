@@ -7,19 +7,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$sourceRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$sourceRoot = Split-Path -Parent $scriptRoot
 $pluginRoot = Join-Path $sourceRoot "plugins\\ddd-clean-migration"
 $targetRoot = Resolve-Path $TargetRepo
 
 Write-Host "Installing Codex DDD/Clean Migration Kit into: $targetRoot"
 
-New-Item -ItemType Directory -Force "$targetRoot\.codex\agents" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\skills" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\prompts" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\templates" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\scripts" | Out-Null
 
-Copy-Item "$pluginRoot\.codex\agents\*" "$targetRoot\.codex\agents\" -Recurse -Force
 Copy-Item "$pluginRoot\.codex\prompts\*" "$targetRoot\.codex\prompts\" -Recurse -Force
 Copy-Item "$pluginRoot\.codex\templates\*" "$targetRoot\.codex\templates\" -Recurse -Force
 Copy-Item "$pluginRoot\skills\*" "$targetRoot\.codex\skills\" -Recurse -Force
@@ -40,3 +39,5 @@ Get-ChildItem "$targetRoot\.codex\skills" -Recurse -Filter "SKILL.md" | ForEach-
 }
 
 Write-Host "Installation completed."
+Write-Host "Note: current Codex Desktop runtimes delegate with built-in subagent roles such as explorer/worker."
+Write-Host "Use the installed skills and AGENTS.md guidance to make subagents act as legacy-discovery, ddd-design, or clean-migration-worker."
