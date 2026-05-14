@@ -11,12 +11,17 @@ The plugin guides the team through these phases:
 1. broad discovery of the legacy system
 2. optional deep discovery of selected bounded contexts
 3. DDD/Clean design synthesis
-4. build-order recommendation for the new target system
-5. optional greenfield delivery of the selected target scope
+4. greenfield develop phase for the selected target scope
 
 The core purpose is advisory.
 The agent should help the user make better decisions.
 The user decides when a phase starts or ends.
+
+The workflow must always preserve these three phases:
+
+- `DISCOVERY`
+- `DESIGN`
+- `DEVELOP`
 
 Discovery is evidence gathering.
 It is not a request to fix the legacy codebase.
@@ -38,8 +43,16 @@ The plugin should help produce:
 - per-bounded-context discovery reports
 - per-bounded-context DDD/Clean design reports
 - target model definitions
-- build-order recommendations
+- develop-phase delivery reports
+- develop-phase validation reports
 - open-question backlogs for human validation
+
+Suggested artifact structure:
+
+- `migration/00-system/`
+- `migration/bounded-contexts/<slug>/01-discovery/`
+- `migration/bounded-contexts/<slug>/02-design/`
+- `migration/bounded-contexts/<slug>/03-develop/`
 
 ## Repository Layout
 
@@ -119,9 +132,42 @@ To overwrite an existing `AGENTS.md`:
 .\install-project.ps1 -TargetRepo "C:\path\to\target-repo" -OverwriteAgentsMd
 ```
 
-## Workflow Prompts
+## Phase Instructions
 
-### Broad Discovery
+The workflow must always move through these three phases:
+
+1. `DISCOVERY`
+2. `DESIGN`
+3. `DEVELOP`
+
+The user decides when a phase starts and when it ends.
+The agent must guide the decision and keep the phase artifacts updated.
+
+### DISCOVERY
+
+Goal:
+
+- understand the legacy system as an evidence source
+- identify candidate bounded contexts, relationships, business rules, dependencies, and ambiguities
+- decide whether the user has enough evidence to move into `DESIGN`
+
+Recommended agent and skills:
+
+- `legacy-discovery`
+- `legacy-business-logic-extraction`
+
+Artifacts to create or update:
+
+- `migration/migration-project.yaml`
+- `migration/00-system/bounded-context-catalog.md`
+- `migration/00-system/bounded-context-catalog.yaml`
+- `migration/00-system/context-map.md`
+- `migration/bounded-contexts/<slug>/01-discovery/discovery.md`
+- `migration/bounded-contexts/<slug>/01-discovery/discovery.yaml`
+
+Typical prompts:
+
+#### Broad Discovery
 
 ```text
 Usa il profilo `legacy-discovery` tramite un subagent `explorer` con `legacy-business-logic-extraction`.
@@ -132,7 +178,7 @@ Consiglia la delega solo quando migliora la qualita' della discovery.
 Non proporre remediation del legacy.
 ```
 
-### Deep Discovery
+#### Deep Discovery
 
 ```text
 Usa il profilo `legacy-discovery` tramite un subagent `explorer` con `legacy-business-logic-extraction`.
@@ -141,7 +187,7 @@ Riporta evidenze, design pressures, ambiguita' di dominio, ipotesi esplicite e c
 Non proporre refactoring o remediation del legacy.
 ```
 
-### Parallel BC Deep Discovery
+#### Parallel BC Deep Discovery
 
 ```text
 Dopo la broad discovery, valuta ogni bounded context candidato.
@@ -154,25 +200,66 @@ Per ogni BC candidato riporta:
 - dubbi aperti
 ```
 
-### Design
+### DESIGN
+
+Goal:
+
+- turn discovery evidence into a target DDD/Clean Architecture model
+- define bounded contexts, aggregates, value objects, use cases, ports, repositories, and clean boundaries
+- decide whether the user has enough design clarity to move into `DEVELOP`
+
+Recommended agent and skills:
+
+- `ddd-design`
+- `ddd-aggregate-design`
+- `clean-architecture-boundaries`
+
+Artifacts to create or update:
+
+- `migration/migration-project.yaml`
+- `migration/bounded-contexts/<slug>/02-design/design.md`
+- `migration/bounded-contexts/<slug>/02-design/model.yaml`
+
+Typical prompt:
 
 ```text
 Usa il profilo `ddd-design` tramite un subagent `explorer` con `ddd-aggregate-design` e `clean-architecture-boundaries`.
 Progetta DDD/Clean per [SCOPE].
 Non modificare codice.
-Trasforma la discovery in decisioni di design, modello target e build order consigliato.
+Trasforma la discovery in decisioni di design e modello target.
+Aggiorna gli artifact di 02-design.
 ```
 
-### Build Order
+### DEVELOP
+
+Goal:
+
+- build the new target project for the selected scope
+- implement only the requested target-system scope
+- validate the result and keep the develop-phase artifacts current
+
+Recommended agent and skills:
+
+- `clean-migration-worker`
+- `clean-architecture-boundaries`
+- `architecture-validation`
+
+Artifacts to create or update:
+
+- `migration/bounded-contexts/<slug>/03-develop/develop.md`
+- `migration/bounded-contexts/<slug>/03-develop/validation.md`
+- target project files under `migration/new-projects/<slug>/`
+
+Typical prompt:
 
 ```text
-Usa discovery e design gia' raccolti.
-Consigliami l'ordine di costruzione del nuovo sistema.
-Motiva l'ordine con centralita' del dominio, dipendenze concettuali, rischio architetturale e valore informativo.
-Non ragionare in termini di migration slice o di modifiche incrementali al legacy.
+L'utente ha avviato la fase DEVELOP del nuovo sistema.
+Usa clean-migration-worker solo per costruire il target project, non per modificare il legacy.
+Implementa solo lo scope richiesto e mantieni aggiornati gli artifact di 03-develop.
+Valida il risultato prima di chiudere la fase.
 ```
 
 ## Recommended Usage
 
 Usa il plugin per capire il legacy, chiarire i bounded contexts, ridurre le ambiguita' di dominio e progettare meglio il sistema nuovo.
-Se il team entra in una fase di delivery, il lavoro deve riguardare il nuovo target project, non il cleanup del legacy.
+Quando il team entra in `DEVELOP`, il lavoro deve riguardare il nuovo target project e deve aggiornare gli artifact di fase, non il cleanup del legacy.

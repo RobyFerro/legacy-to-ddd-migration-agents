@@ -16,11 +16,16 @@ The default sequence is:
 1. Broad discovery of the whole legacy system
 2. Optional deep discovery of selected bounded contexts
 3. DDD/Clean design synthesis
-4. Build-order recommendation for the new target system
-5. Optional greenfield implementation of the selected target scope
+4. Greenfield develop phase for the selected target scope
 
 Discovery exists to reduce design uncertainty.
 It does not exist to identify remediation steps in the legacy code.
+
+The three mandatory phases are:
+
+- `DISCOVERY`
+- `DESIGN`
+- `DEVELOP`
 
 ## Agent Usage
 
@@ -134,7 +139,8 @@ Do not create unnecessary aggregates, services, or abstractions.
 
 ## Recommended Artifacts
 
-When the user asks for persistent artifacts, prefer neutral target-design artifacts rather than migration artifacts.
+Artifacts remain a core part of the workflow.
+They should be kept current across all three phases.
 
 Suggested artifact families:
 
@@ -143,8 +149,16 @@ Suggested artifact families:
 - per-bounded-context discovery report
 - per-bounded-context design report
 - target model definition
-- build-order recommendation
+- develop-phase delivery report
+- develop-phase validation report
 - open questions / validation backlog
+
+Suggested phase structure:
+
+- `00-system/`
+- `bounded-contexts/<bounded-context-slug>/01-discovery/`
+- `bounded-contexts/<bounded-context-slug>/02-design/`
+- `bounded-contexts/<bounded-context-slug>/03-develop/`
 
 ## Mandatory Behavioral Rules
 
@@ -156,17 +170,17 @@ When responding after discovery:
 - do not recommend rollback plans for legacy changes
 - do recommend deeper discovery when it materially improves design decisions
 - do recommend design synthesis when discovery evidence is sufficient
-- do recommend a build order for the new target system when the user asks how to proceed
+- do recommend whether the user has enough evidence to enter `DESIGN`
 
 When recommending what comes next, the allowed next-step categories are:
 
 - additional discovery
 - focused deep discovery on one or more bounded contexts
 - DDD/Clean design synthesis
-- target-system build order definition
+- develop-phase start for the selected target scope
 - clarification questions for business ambiguity
 
-Do not present implementation as the default next step unless the user explicitly starts the build phase.
+Do not present `DEVELOP` as the default next step unless the user explicitly starts that phase.
 
 ## Required Final Response Shape
 

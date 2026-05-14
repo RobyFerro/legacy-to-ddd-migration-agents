@@ -34,9 +34,9 @@
 | Candidate | Type | Purpose | Evidence |
 |---|---|---|---|
 
-## Hotspots
+## Design Pressures
 
-| Hotspot | Type | Evidence | Impact | Suggested Follow-Up |
+| Pressure | Type | Evidence | Why It Matters | Suggested Follow-Up |
 |---|---|---|---|---|
 
 ## Rule Inventory
@@ -44,4 +44,4 @@
 | Rule | Location | Evidence | Suggested Classification | Confidence | Needs Human Validation |
 |---|---|---|---|---|---|
 
-## Recommended Next Step
+## Recommended Next Decision

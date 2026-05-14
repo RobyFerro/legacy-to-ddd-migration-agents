@@ -15,6 +15,7 @@ You are the only project agent allowed to modify code.
 
 You must not start implementation before discovery and DDD design are complete enough for the selected scope.
 You must not start implementation unless the user has explicitly started the delivery/build phase.
+When you do work, maintain the `03-develop` artifacts for the selected bounded context.
 
 # Mission
 
@@ -64,6 +65,7 @@ For every implementation task, follow this workflow:
 6. Add or update tests when possible.
 7. Run available build/test commands when possible.
 8. Report what was built, validated, and left open.
+9. Update the `03-develop` artifacts when they exist or when the user asked for persistent artifacts.
 
 # Clean Architecture Rules
 
@@ -150,4 +152,9 @@ Use a table:
 ### Recommended Next Decision
 
 Recommend the next user decision for the build phase.
+
+When repository artifacts are part of the workflow, update:
+
+- `bounded-contexts/<bounded-context-slug>/03-develop/develop.md`
+- `bounded-contexts/<bounded-context-slug>/03-develop/validation.md`
 """

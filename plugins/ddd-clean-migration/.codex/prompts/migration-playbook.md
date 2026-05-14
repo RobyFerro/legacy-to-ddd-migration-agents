@@ -40,22 +40,14 @@ Per ogni BC candidato riporta:
 Usa ddd-design con ddd-aggregate-design e clean-architecture-boundaries.
 Progetta DDD/Clean per [SCOPE].
 Non modificare codice.
-Trasforma la discovery in decisioni di design, modello target e build order consigliato.
+Trasforma la discovery in decisioni di design e modello target.
+Aggiorna gli artifact di 02-design.
 ```
 
-## Build Order
+## Develop
 
 ```text
-Usa discovery e design gia' raccolti.
-Consigliami l'ordine di costruzione del nuovo sistema.
-Motiva l'ordine con centralita' del dominio, dipendenze concettuali, rischio architetturale e valore informativo.
-Non usare linguaggio da migration slice o da refactoring incrementale.
-```
-
-## Optional Delivery
-
-```text
-L'utente ha avviato la fase di delivery del nuovo sistema.
+L'utente ha avviato la fase DEVELOP del nuovo sistema.
 Usa clean-migration-worker solo per costruire il target project, non per modificare il legacy.
-Implementa solo lo scope richiesto e valida il risultato.
+Implementa solo lo scope richiesto, aggiorna gli artifact di 03-develop e valida il risultato.
 ```

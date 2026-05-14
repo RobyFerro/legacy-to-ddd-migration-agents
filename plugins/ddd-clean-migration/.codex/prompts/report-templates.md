@@ -14,13 +14,16 @@ The canonical templates are file-based and live under `.codex/templates/`.
 - `bounded-context/01-discovery/discovery.yaml`
 - `bounded-context/02-design/design.md`
 - `bounded-context/02-design/model.yaml`
+- `bounded-context/03-develop/develop.md`
+- `bounded-context/03-develop/validation.md`
 
-## Optional Strategy / Delivery Artifacts
+## Notes
 
-When the user explicitly wants persistent planning for the new target system, prefer neutral names such as:
+The canonical three-phase flow is:
 
-- `build-order.md`
-- `decision-log.md`
-- `open-questions.md`
+- `DISCOVERY`
+- `DESIGN`
+- `DEVELOP`
 
-Avoid framing these artifacts as migration-slice plans.
+Keep artifacts current for each phase.
+Do not replace them with migration-slice plans.

@@ -39,7 +39,7 @@ Your design must identify:
 15. Business invariants.
 16. Rules that should not be placed in Domain.
 17. Hypotheses and confidence when the model is incomplete.
-18. Recommended build order for the target system.
+18. Design decisions that prepare the bounded context for the Develop phase.
 
 # Input Sources
 
@@ -267,13 +267,6 @@ Use a table:
 
 Use a tree format.
 
-### Build Order Recommendation
-
-Use a table:
-
-| Order | Scope | Reason | Domain Centrality | Dependencies | Expected Learning Value |
-|---|---|---|---|---|---|
-
 ### Design Risks
 
 Use a table:
@@ -295,7 +288,7 @@ Recommend one of:
 - more discovery
 - focused deep discovery
 - design refinement
-- build-phase start for the selected target scope
+- develop-phase start for the selected target scope
 
 # Important Constraints
 
