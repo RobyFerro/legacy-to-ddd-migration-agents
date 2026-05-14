@@ -6,12 +6,15 @@ This repository is also a Codex plugin marketplace repository. The distributable
 
 ## What The Plugin Does
 
-The plugin guides the team through three phases:
+The plugin guides the team through these phases:
 
-1. broad discovery of the legacy system to identify candidate bounded contexts and a simple context map
-2. optional per-bounded-context deep discovery delegation, coordinated by the main agent when the candidate partition is stable enough
-3. deep discovery, DDD design, and migration planning for one bounded context at a time
-4. implementation of approved migration slices in a new project created inside the same repository, or in a lighter safe area when explicitly preferred
+1. workspace bootstrap for migration artifacts and target implementation area
+2. broad discovery of the legacy system to identify candidate bounded contexts and a simple context map
+3. optional per-bounded-context deep discovery delegation when boundaries are stable enough
+4. DDD/Clean design for one bounded context at a time
+5. migration-slice planning
+6. implementation of one approved slice at a time
+7. architectural and traceability validation
 
 The process is evidence-based and traceable. Discovery and design artifacts must cite concrete legacy paths, methods, queries, and modules.
 
@@ -28,11 +31,12 @@ The plugin scaffolds and maintains:
 
 ## Repository Layout
 
-- `plugins/ddd-clean-migration/.codex-plugin/plugin.json`: distributable plugin manifest
 - `.agents/plugins/marketplace.json`: marketplace catalog entry for Codex
-- `.codex/`: local-development copy of agents, prompts, templates, and scripts
-- `skills/`: local-development copy of the bundled skills
-- `plugins/ddd-clean-migration/`: packaged plugin content
+- `plugins/ddd-clean-migration/.codex-plugin/plugin.json`: distributable plugin manifest
+- `plugins/ddd-clean-migration/.codex/`: bundled agents, prompts, and templates
+- `plugins/ddd-clean-migration/skills/`: bundled skills
+- `plugins/ddd-clean-migration/scripts/`: bundled helper scripts
+- `install-global.ps1`, `install-project.ps1`, `update-global-clean.ps1`: repository-level install helpers
 
 ## Bundled Agents
 
@@ -51,7 +55,7 @@ The plugin scaffolds and maintains:
 
 ## Selected Coding Guardrails
 
-The plugin also includes a selective set of coding guardrails for the implementation phase. These are adapted from the NeoLabHQ DDD ruleset and applied only where they materially support migration work:
+The plugin includes a selective set of coding guardrails for the implementation phase. These are adapted from the NeoLabHQ DDD ruleset and applied only where they materially support migration work:
 
 - keep Domain and Infrastructure separate
 - enforce separation of concerns across layers
@@ -111,99 +115,149 @@ To overwrite an existing `AGENTS.md`:
 .\install-project.ps1 -TargetRepo "C:\path\to\target-repo" -OverwriteAgentsMd
 ```
 
-## Bootstrap The Migration Workspace
+## Workspace Bootstrap
 
-After installation, initialize the migration workspace in the target repository.
-
-Default mode creates a standalone new project area for migrated bounded contexts:
+If the migration workspace does not exist yet, create the standard structure under `migration/` with a standalone new project inside the same repository as the default target:
 
 ```powershell
-.\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "C:\path\to\target-repo"
+.\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "<repo-path>"
 ```
 
-This command creates the migration workspace only.
-The Clean Architecture layer folders are scaffolded only when you also provide `-BoundedContextName`.
-
-Optional: scaffold the artifact folder for a first bounded context.
+Optional strangler-style alternative:
 
 ```powershell
-.\.codex\scripts\initialize-migration-workspace.ps1 `
-  -TargetRepo "C:\path\to\target-repo" `
-  -BoundedContextName "Billing"
+.\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "<repo-path>" -ImplementationMode SafeArea
 ```
 
-With `-BoundedContextName`, the plugin also creates the target implementation structure for that bounded context:
-
-```text
-migration/new-projects/billing/src/
-  Domain/
-  Application/
-  Infrastructure/
-  Presentation/
-```
-
-If you explicitly want the lighter strangler-style safe area instead of a standalone project:
+Optional bounded-context bootstrap:
 
 ```powershell
 .\.codex\scripts\initialize-migration-workspace.ps1 `
-  -TargetRepo "C:\path\to\target-repo" `
-  -BoundedContextName "Billing" `
-  -ImplementationMode SafeArea
+  -TargetRepo "<repo-path>" `
+  -BoundedContextName "<BC Name>"
 ```
 
-In `SafeArea` mode the same layer structure is created under:
-
-```text
-migration/safe-area/billing/src/
-  Domain/
-  Application/
-  Infrastructure/
-  Presentation/
-```
-
-To create the next implementation slice artifact folder automatically:
+Create the next slice artifact folder:
 
 ```powershell
 .\.codex\scripts\new-slice-artifacts.ps1 `
-  -TargetRepo "C:\path\to\target-repo" `
-  -BoundedContextName "Billing"
+  -TargetRepo "<repo-path>" `
+  -BoundedContextName "<BC Name>"
 ```
 
-## Broad-To-Specific Workflow
+## Workflow Prompts
 
-1. Run a broad system discovery to identify candidate bounded contexts and a simple context map.
-2. Always present the option to launch dedicated deep-discovery agents for the detected bounded contexts.
-3. Let the main agent decide whether delegation is appropriate or should be deferred because boundaries are still unstable.
-4. Select one bounded context.
-5. Run deep discovery for that bounded context.
-6. Produce DDD/Clean design and migration slices.
-7. Implement only the approved slice in the standalone new project by default, or in the safe area when explicitly chosen.
-8. Validate architectural boundaries, preserved behavior, and traceability.
-
-Implementation should create one artifact folder per slice, for example:
+### Broad Discovery
 
 ```text
-migration/bounded-contexts/billing/04-implementation/slices/slice-001/
-  slice.md
-  traceability.md
-  validation.md
-  handoff.md
+Usa legacy-discovery con legacy-business-logic-extraction.
+Esegui una broad discovery dell'intero sistema legacy.
+Identifica candidate bounded context, relazioni, dipendenze e hotspot.
+Mostra sempre la possibilita' di avviare deep discovery dedicate per BC.
+Decidi tu se delegare subito o rinviare la delega in base alla stabilita' dei confini.
+Aggiorna:
+- migration/migration-project.yaml
+- migration/00-system/bounded-context-catalog.md
+- migration/00-system/bounded-context-catalog.yaml
+- migration/00-system/context-map.md
 ```
 
-## First Planning Prompt
+### Deep Discovery
 
 ```text
-Inizializza il workspace di migrazione se manca.
-Usa la modalita' new-project come default.
-Esegui una broad discovery del sistema legacy per identificare bounded context candidati e relazioni.
-Valuta se la partizione e' abbastanza stabile da delegare deep discovery parallela per BC.
-Poi prepara la deep discovery del bounded context [Name].
+Usa legacy-discovery con legacy-business-logic-extraction.
+Analizza il bounded context [SCOPE] in profondita' in modalita' read-only.
+Aggiorna:
+- migration/bounded-contexts/[slug]/01-discovery/discovery.md
+- migration/bounded-contexts/[slug]/01-discovery/discovery.yaml
+Riporta ipotesi esplicite con confidence quando il codice non e' chiaro.
 ```
 
-## Implementation Approval Prompt
+### Parallel BC Deep Discovery
+
+```text
+Dopo la broad discovery, valuta ogni bounded context candidato.
+Mostra sempre l'opzione di lanciare agenti legacy-discovery dedicati.
+Delega solo i BC con confini abbastanza stabili.
+Se la partizione e' ancora instabile, spiega perche' continui la discovery in modo centralizzato.
+Per ogni BC candidato riporta:
+- responsabilita'
+- segnali/evidenze
+- focus suggerito per la deep discovery
+- precondizioni o dubbi aperti
+```
+
+### Design
+
+```text
+Usa ddd-design con ddd-aggregate-design e clean-architecture-boundaries.
+Progetta DDD/Clean per [SCOPE].
+Non modificare codice.
+Aggiorna:
+- migration/bounded-contexts/[slug]/02-design/design.md
+- migration/bounded-contexts/[slug]/02-design/model.yaml
+- migration/migration-project.yaml
+```
+
+### Migration Plan
+
+```text
+Usa clean-migration-worker con migration-slice-planning.
+Crea solo il migration plan per [SCOPE].
+Non modificare codice.
+Dividi il lavoro in slice piccoli e consigliami il primo.
+Aggiorna migration/bounded-contexts/[slug]/03-planning/migration-plan.md.
+```
+
+### Implementation
 
 ```text
 APPROVED: implement this migration slice
+
+Usa clean-migration-worker con clean-architecture-boundaries.
+Implementa solo lo slice approvato.
+Non ampliare scope.
+Preserva comportamento legacy.
+Lavora principalmente dentro migration/new-projects/.
+Usa migration/safe-area/ solo se la strategia scelta lo richiede esplicitamente.
+Determina il prossimo slice-id e crea la relativa cartella artefatti se manca.
+Puoi usare .\.codex\scripts\new-slice-artifacts.ps1 per automatizzare questo step.
+Aggiorna:
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/slice.md
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/traceability.md
+- migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/validation.md
+- opzionalmente migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/handoff.md
+```
+
+### Validation
+
+```text
+Usa clean-migration-worker con architecture-validation.
+Valida lo slice appena implementato.
+Non modificare codice.
+Aggiorna migration/bounded-contexts/[slug]/04-implementation/slices/[slice-id]/validation.md.
+```
+
+### Bounded Context Planning
+
+```text
+Pianifica la migrazione broad-to-specific del bounded context [Name].
+Se manca, esegui prima la broad discovery del sistema.
+Se emergono piu' BC candidati, valuta se avviare deep discovery parallela solo per quelli abbastanza stabili.
+```
+
+## Expected Workflow
+
+```text
+legacy-discovery + legacy-business-logic-extraction
+↓
+legacy-discovery + legacy-business-logic-extraction
+↓
+ddd-design + ddd-aggregate-design + clean-architecture-boundaries
+↓
+clean-migration-worker + migration-slice-planning
+↓
+STOP before implementation
 ```
 
 ## Recommended Usage
