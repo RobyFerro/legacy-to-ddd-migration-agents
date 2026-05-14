@@ -143,6 +143,140 @@ The workflow must always move through these three phases:
 The user decides when a phase starts and when it ends.
 The agent must guide the decision and keep the phase artifacts updated.
 
+## Complete Phase Prompts
+
+These prompts are intended to be copied as phase-entry prompts.
+Each one is complete enough to start the phase without relying on hidden context.
+
+### Prompt To Start DISCOVERY
+
+```text
+Avvia la fase DISCOVERY.
+
+Usa il profilo `legacy-discovery` tramite un subagent `explorer` con `legacy-business-logic-extraction`.
+Tratta il sistema legacy come fonte di evidenze per progettare un sistema nuovo da zero.
+Non trattare la discovery come una richiesta di remediation, refactoring o migrazione incrementale del legacy.
+
+Obiettivi:
+- capire la struttura del repository
+- identificare candidate bounded context
+- mappare relazioni, dipendenze, integrazioni e flussi principali
+- estrarre business rules, legacy signals, design pressures e domain ambiguities
+- capire se serve deep discovery su uno o piu' bounded context
+
+Output atteso:
+- report strutturato in Markdown
+- evidenze sempre collegate a path/file del legacy
+- ipotesi esplicite con confidence quando il codice non basta
+- raccomandazione finale sul prossimo passo decisionale
+
+Artifact da creare o aggiornare:
+- migration/migration-project.yaml
+- migration/00-system/bounded-context-catalog.md
+- migration/00-system/bounded-context-catalog.yaml
+- migration/00-system/context-map.md
+
+Se analizzi un bounded context specifico, aggiorna anche:
+- migration/bounded-contexts/[slug]/01-discovery/discovery.md
+- migration/bounded-contexts/[slug]/01-discovery/discovery.yaml
+
+Vincoli:
+- non modificare codice
+- non proporre remediation del legacy
+- non proporre migration slices
+- non entrare in DESIGN o DEVELOP senza dirlo esplicitamente
+
+Alla fine dimmi se il sistema e' pronto per:
+- altra discovery
+- deep discovery mirata
+- DESIGN
+```
+
+### Prompt To Start DESIGN
+
+```text
+Avvia la fase DESIGN per [SCOPE].
+
+Usa il profilo `ddd-design` tramite un subagent `explorer` con `ddd-aggregate-design` e `clean-architecture-boundaries`.
+Usa la discovery gia' disponibile come fonte primaria.
+Se la discovery e' insufficiente, dichiaralo esplicitamente invece di inventare certezze.
+
+Obiettivi:
+- trasformare le evidenze della discovery in un modello target DDD/Clean
+- definire bounded context, aggregate, entity, value object, domain service e use case
+- definire repository, gateway, port, anti-corruption layer e confini architetturali
+- chiarire quali decisioni di design sono abbastanza stabili da permettere il DEVELOP
+
+Output atteso:
+- report strutturato in Markdown
+- model definition coerente con il target system
+- design risks
+- unknowns / needs human validation
+- raccomandazione finale sul prossimo passo decisionale
+
+Artifact da creare o aggiornare:
+- migration/migration-project.yaml
+- migration/bounded-contexts/[slug]/02-design/design.md
+- migration/bounded-contexts/[slug]/02-design/model.yaml
+
+Vincoli:
+- non modificare codice
+- non proporre remediation del legacy
+- non creare migration plan incrementali
+- non entrare in DEVELOP senza dirlo esplicitamente
+
+Alla fine dimmi se il bounded context e' pronto per:
+- altra discovery
+- refinement del design
+- DEVELOP
+```
+
+### Prompt To Start DEVELOP
+
+```text
+Avvia la fase DEVELOP per [SCOPE].
+
+Usa il profilo `clean-migration-worker`.
+Lavora solo sul nuovo target project.
+Non usare il legacy come target di remediation.
+Usa discovery e design esistenti come input vincolanti.
+
+Obiettivi:
+- costruire solo lo scope richiesto nel nuovo sistema
+- mantenere separazione Clean Architecture tra Domain, Application, Infrastructure e Presentation
+- aggiornare gli artifact della fase DEVELOP
+- validare il risultato prima di chiudere la fase
+
+Input minimi da leggere:
+- migration/migration-project.yaml
+- migration/bounded-contexts/[slug]/01-discovery/discovery.md
+- migration/bounded-contexts/[slug]/02-design/design.md
+- migration/bounded-contexts/[slug]/02-design/model.yaml
+- struttura del target project sotto migration/new-projects/[slug]/
+
+Artifact da creare o aggiornare:
+- migration/bounded-contexts/[slug]/03-develop/develop.md
+- migration/bounded-contexts/[slug]/03-develop/validation.md
+
+Output atteso:
+- implementazione del solo scope richiesto
+- test aggiunti o aggiornati quando possibile
+- esito build/test
+- rischi residui
+- raccomandazione finale sul prossimo passo decisionale
+
+Vincoli:
+- non fare cleanup del legacy
+- non ampliare scope
+- non fare refactoring non richiesto
+- non violare i boundary del design target
+
+Prima di chiudere:
+- valida build e test quando possibile
+- aggiorna gli artifact di 03-develop
+- spiega cosa e' stato costruito e cosa resta aperto
+```
+
 ### DISCOVERY
 
 Goal:
