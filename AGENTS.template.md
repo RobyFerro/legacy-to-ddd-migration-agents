@@ -137,12 +137,16 @@ When designing the target model, identify:
 Prefer simple models over over-engineered models.
 Do not create unnecessary aggregates, services, or abstractions.
 
-## Recommended Artifacts
+ ## Recommended Artifacts
+ 
+ Artifacts remain a core part of the workflow.
+ They should be kept current across all three phases.
 
-Artifacts remain a core part of the workflow.
-They should be kept current across all three phases.
+Default artifact root:
 
-Suggested artifact families:
+- `migration/`
+
+ Suggested artifact families:
 
 - system bounded-context catalog
 - context map
@@ -153,12 +157,24 @@ Suggested artifact families:
 - develop-phase validation report
 - open questions / validation backlog
 
-Suggested phase structure:
+ Suggested phase structure:
 
-- `00-system/`
-- `bounded-contexts/<bounded-context-slug>/01-discovery/`
-- `bounded-contexts/<bounded-context-slug>/02-design/`
-- `bounded-contexts/<bounded-context-slug>/03-develop/`
+ - `migration/00-system/`
+ - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/`
+ - `migration/bounded-contexts/<bounded-context-slug>/02-design/`
+ - `migration/bounded-contexts/<bounded-context-slug>/03-develop/`
+
+During `DISCOVERY`, create or update at least:
+
+- `migration/migration-project.yaml`
+- `migration/00-system/bounded-context-catalog.md`
+- `migration/00-system/bounded-context-catalog.yaml`
+- `migration/00-system/context-map.md`
+
+When a specific bounded context is analyzed in enough depth, also create or update:
+
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.yaml`
 
 ## Mandatory Behavioral Rules
 

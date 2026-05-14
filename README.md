@@ -118,19 +118,27 @@ Then restart Codex. The plugin will appear as `ddd-clean-migration`.
 .\install-project.ps1 -TargetRepo "C:\path\to\target-repo"
 ```
 
-This installs:
+ This installs:
+ 
+ - `.codex/skills`
+ - `.codex/prompts`
+ - `.codex/templates`
+ - `.codex/scripts`
+ - `AGENTS.md`
+ - `migration/` bootstrap workspace for phase artifacts
 
-- `.codex/skills`
-- `.codex/prompts`
-- `.codex/templates`
-- `.codex/scripts`
-- `AGENTS.md`
-
-To overwrite an existing `AGENTS.md`:
+ To overwrite an existing `AGENTS.md`:
 
 ```powershell
-.\install-project.ps1 -TargetRepo "C:\path\to\target-repo" -OverwriteAgentsMd
-```
+ .\install-project.ps1 -TargetRepo "C:\path\to\target-repo" -OverwriteAgentsMd
+ ```
+
+Important:
+
+- the plugin does not use `docs/` as its default artifact root
+- discovery, design, and develop artifacts are expected under `migration/`
+- broad discovery should update system-level files under `migration/00-system/`
+- per-bounded-context artifacts are created when a bounded context is selected or analyzed deeply enough
 
 ## Phase Instructions
 
