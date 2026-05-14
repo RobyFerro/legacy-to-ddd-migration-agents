@@ -38,4 +38,4 @@ foreach ($skillName in $managedSkills) {
 }
 
 Write-Host "Reinstalling plugin content from: $pluginRoot"
-& (Join-Path $sourceRoot "install-global.ps1")
+& (Join-Path $scriptRoot "install-global.ps1")

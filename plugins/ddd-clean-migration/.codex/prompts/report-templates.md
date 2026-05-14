@@ -2,10 +2,6 @@
 
 The canonical templates are file-based and live under `.codex/templates/`.
 
-## Central Manifest
-
-- `migration-project.yaml`
-
 ## System Discovery
 
 - `00-system/bounded-context-catalog.md`
@@ -18,14 +14,13 @@ The canonical templates are file-based and live under `.codex/templates/`.
 - `bounded-context/01-discovery/discovery.yaml`
 - `bounded-context/02-design/design.md`
 - `bounded-context/02-design/model.yaml`
-- `bounded-context/03-planning/migration-plan.md`
-- `bounded-context/04-implementation/slices/<slice-id>/slice.md`
-- `bounded-context/04-implementation/slices/<slice-id>/traceability.md`
-- `bounded-context/04-implementation/slices/<slice-id>/validation.md`
-- `bounded-context/04-implementation/slices/<slice-id>/handoff.md`
 
-## Safe Area
+## Optional Strategy / Delivery Artifacts
 
-- `safe-area/README.md`
-- `safe-area/src/README.md`
-- `safe-area/tests/README.md`
+When the user explicitly wants persistent planning for the new target system, prefer neutral names such as:
+
+- `build-order.md`
+- `decision-log.md`
+- `open-questions.md`
+
+Avoid framing these artifacts as migration-slice plans.

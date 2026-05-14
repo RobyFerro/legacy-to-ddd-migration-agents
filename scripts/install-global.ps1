@@ -5,7 +5,7 @@ $sourceRoot = Split-Path -Parent $scriptRoot
 $pluginRoot = Join-Path $sourceRoot "plugins\\ddd-clean-migration"
 $codexHome = "$HOME\.codex"
 
-Write-Host "Installing Codex DDD/Clean Migration Kit globally into: $codexHome"
+Write-Host "Installing Codex Legacy-Informed DDD/Clean Design Kit globally into: $codexHome"
 
 New-Item -ItemType Directory -Force "$codexHome\skills" | Out-Null
 New-Item -ItemType Directory -Force "$codexHome\prompts" | Out-Null
@@ -25,4 +25,4 @@ Get-ChildItem "$codexHome\skills" -Recurse -Filter "SKILL.md" | ForEach-Object {
 
 Write-Host "Global installation completed."
 Write-Host "Note: current Codex Desktop runtimes delegate with built-in subagent roles such as explorer/worker."
-Write-Host "Use the installed skills and AGENTS guidance to make subagents act as legacy-discovery, ddd-design, or clean-migration-worker."
+Write-Host "Use the installed skills and AGENTS guidance to make subagents act as legacy-discovery, ddd-design, or clean-migration-worker for target-project delivery only."
