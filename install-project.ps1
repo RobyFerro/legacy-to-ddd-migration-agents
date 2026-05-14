@@ -16,10 +16,14 @@ Write-Host "Installing Codex DDD/Clean Migration Kit into: $targetRoot"
 New-Item -ItemType Directory -Force "$targetRoot\.codex\agents" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\skills" | Out-Null
 New-Item -ItemType Directory -Force "$targetRoot\.codex\prompts" | Out-Null
+New-Item -ItemType Directory -Force "$targetRoot\.codex\templates" | Out-Null
+New-Item -ItemType Directory -Force "$targetRoot\.codex\scripts" | Out-Null
 
 Copy-Item "$pluginRoot\.codex\agents\*" "$targetRoot\.codex\agents\" -Recurse -Force
 Copy-Item "$pluginRoot\.codex\prompts\*" "$targetRoot\.codex\prompts\" -Recurse -Force
+Copy-Item "$pluginRoot\.codex\templates\*" "$targetRoot\.codex\templates\" -Recurse -Force
 Copy-Item "$pluginRoot\skills\*" "$targetRoot\.codex\skills\" -Recurse -Force
+Copy-Item "$pluginRoot\scripts\*" "$targetRoot\.codex\scripts\" -Recurse -Force
 
 $agentsTarget = "$targetRoot\AGENTS.md"
 if (!(Test-Path $agentsTarget) -or $OverwriteAgentsMd) {

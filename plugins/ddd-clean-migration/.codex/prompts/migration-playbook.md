@@ -2,11 +2,41 @@
 
 Use these short prompts from the repository root.
 
-## Discovery
+## Workspace Bootstrap
+
+```text
+Se il workspace di migrazione non esiste, crea la struttura standard sotto migration/
+usando il template del progetto e una safe area nella stessa repository.
+```
+
+Suggested command:
+
+```powershell
+.\.codex\scripts\initialize-migration-workspace.ps1 -TargetRepo "<repo-path>"
+```
+
+## Broad Discovery
 
 ```text
 Usa legacy-discovery con legacy-business-logic-extraction.
-Analizza [SCOPE] read-only e aggiorna legacy-discovery-report.md.
+Esegui una broad discovery dell'intero sistema legacy.
+Identifica candidate bounded context, relazioni, dipendenze e hotspot.
+Aggiorna:
+- migration/migration-project.yaml
+- migration/00-system/bounded-context-catalog.md
+- migration/00-system/bounded-context-catalog.yaml
+- migration/00-system/context-map.md
+```
+
+## Deep Discovery
+
+```text
+Usa legacy-discovery con legacy-business-logic-extraction.
+Analizza il bounded context [SCOPE] in profondita' in modalita' read-only.
+Aggiorna:
+- migration/bounded-contexts/[slug]/01-discovery.md
+- migration/bounded-contexts/[slug]/01-discovery.yaml
+Riporta ipotesi esplicite con confidence quando il codice non e' chiaro.
 ```
 
 ## Design
@@ -15,16 +45,20 @@ Analizza [SCOPE] read-only e aggiorna legacy-discovery-report.md.
 Usa ddd-design con ddd-aggregate-design e clean-architecture-boundaries.
 Progetta DDD/Clean per [SCOPE].
 Non modificare codice.
-Produci ddd-design-proposal.md.
+Aggiorna:
+- migration/bounded-contexts/[slug]/02-design.md
+- migration/bounded-contexts/[slug]/02-model.yaml
+- migration/migration-project.yaml
 ```
 
 ## Migration Plan
 
 ```text
 Usa clean-migration-worker con migration-slice-planning.
-Crea solo migration-plan.md per [SCOPE].
+Crea solo il migration plan per [SCOPE].
 Non modificare codice.
 Dividi il lavoro in slice piccoli e consigliami il primo.
+Aggiorna migration/bounded-contexts/[slug]/03-migration-plan.md.
 ```
 
 ## Implementation
@@ -36,7 +70,10 @@ Usa clean-migration-worker con clean-architecture-boundaries.
 Implementa solo lo slice approvato.
 Non ampliare scope.
 Preserva comportamento legacy.
-Produci implementation-summary.md e validation-report.md.
+Lavora principalmente dentro migration/safe-area/.
+Aggiorna:
+- migration/bounded-contexts/[slug]/04-implementation-notes.md
+- migration/bounded-contexts/[slug]/05-validation.md
 ```
 
 ## Validation
@@ -45,18 +82,21 @@ Produci implementation-summary.md e validation-report.md.
 Usa clean-migration-worker con architecture-validation.
 Valida lo slice appena implementato.
 Non modificare codice.
-Aggiorna validation-report.md.
+Aggiorna migration/bounded-contexts/[slug]/05-validation.md.
 ```
 
 ## Bounded Context Planning
 
 ```text
-Pianifica la migrazione da legacy a DDD del bounded context [Name].
+Pianifica la migrazione broad-to-specific del bounded context [Name].
+Se manca, esegui prima la broad discovery del sistema.
 ```
 
 Expected workflow:
 
 ```text
+legacy-discovery + legacy-business-logic-extraction
+↓
 legacy-discovery + legacy-business-logic-extraction
 ↓
 ddd-design + ddd-aggregate-design + clean-architecture-boundaries

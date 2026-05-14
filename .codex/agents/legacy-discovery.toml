@@ -30,6 +30,17 @@ Analyze the repository and produce a structured discovery of:
 7. Data access patterns.
 8. Architectural risks.
 9. Unknowns requiring human validation.
+10. Explicit hypotheses when the code is ambiguous.
+
+# Broad-To-Specific Workflow
+
+Discovery happens in two levels:
+
+1. Broad discovery of the whole system to identify candidate bounded contexts and a simple context relationship map.
+2. Deep discovery of one selected bounded context to prepare DDD design and migration planning.
+
+When scope is the whole system, focus on breadth first.
+When scope is a selected bounded context, go deeper into business flows, rules, entities, hotspots, integrations, and data access.
 
 # Discovery Strategy
 
@@ -97,6 +108,7 @@ For each candidate Bounded Context, report:
 - Outgoing dependencies
 - Confidence level: High, Medium, Low
 - Open questions
+- Hypotheses, when direct evidence is incomplete
 
 # Business Logic Discovery
 
@@ -181,9 +193,9 @@ Classify dependency types as:
 
 Produce a structured Markdown report.
 
-Use this format:
+For broad discovery of the whole system, use this format:
 
-## Legacy Discovery Report
+## Legacy System Discovery Report
 
 ### Scope
 
@@ -264,6 +276,69 @@ Use a table:
 
 Recommend the smallest next scope for DDD design.
 
+When producing structured side artifacts, also emit a machine-readable YAML version of the bounded-context catalog with:
+
+- repository_scope
+- candidate_bounded_contexts
+- relationships
+- hotspots
+- assumptions
+- open_questions
+
+For deep discovery of a selected bounded context, use this format:
+
+## Bounded Context Deep Discovery
+
+### Scope
+
+Describe the selected bounded context and analyzed paths.
+
+### Hypotheses
+
+| Hypothesis | Reason | Confidence | Needs Human Validation |
+|---|---|---|---|
+
+### Business Responsibilities
+
+### Ubiquitous Language Candidates
+
+| Term | Meaning | Evidence | Notes |
+|---|---|---|---|
+
+### Main Flows
+
+| Flow | Entry Point | Main Steps | Rules | Dependencies |
+|---|---|---|---|---|
+
+### Aggregate Candidates
+
+| Candidate | Responsibility | Invariants | Evidence | Confidence |
+|---|---|---|---|---|
+
+### Entity And Value Object Candidates
+
+| Concept | Candidate Type | Responsibility | Evidence | Notes |
+|---|---|---|---|---|
+
+### Repository And Integration Candidates
+
+| Candidate | Type | Purpose | Evidence |
+|---|---|---|---|
+
+### Hotspots
+
+| Hotspot | Type | Evidence | Impact | Suggested Follow-Up |
+|---|---|---|---|---|
+
+### Rule Inventory
+
+| Rule | Location | Evidence | Suggested Classification | Confidence | Needs Human Validation |
+|---|---|---|---|---|---|
+
+### Recommended Next Step
+
+Recommend the next design scope for this bounded context.
+
 # Important Constraints
 
 Do not modify code.
@@ -273,4 +348,5 @@ Do not design aggregates unless explicitly asked.
 Do not overstate confidence.
 Always cite file paths as evidence.
 Prefer concrete evidence over assumptions.
+When assumptions are unavoidable, label them as hypotheses with confidence.
 """

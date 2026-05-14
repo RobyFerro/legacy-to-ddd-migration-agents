@@ -1,0 +1,45 @@
+project:
+  name: "[TODO: project name]"
+  legacy_root: "[TODO: legacy root path]"
+  safe_area_root: "migration/safe-area"
+  bounded_contexts_root: "migration/bounded-contexts"
+  system_artifacts_root: "migration/00-system"
+  status: "discovery"
+
+standards:
+  architecture_style: "clean-architecture"
+  modeling_style: "ddd"
+  discovery_mode: "broad-to-specific"
+  evidence_required: true
+  confidence_levels:
+    - high
+    - medium
+    - low
+
+stack:
+  languages: []
+  frameworks: []
+  test_frameworks: []
+  build_commands: []
+  test_commands: []
+
+system:
+  candidate_bounded_contexts: []
+  context_map_status: "not-started"
+  last_broad_discovery_date: "[TODO: YYYY-MM-DD]"
+
+active_scope:
+  bounded_context: ""
+  migration_slice: ""
+  current_phase: "broad-discovery"
+
+artifacts:
+  system_catalog_markdown: "migration/00-system/bounded-context-catalog.md"
+  system_catalog_yaml: "migration/00-system/bounded-context-catalog.yaml"
+  context_map_markdown: "migration/00-system/context-map.md"
+
+governance:
+  implementation_policy: "safe-area-first"
+  allow_legacy_seams: true
+  require_validation_gate: true
+  require_traceability: true

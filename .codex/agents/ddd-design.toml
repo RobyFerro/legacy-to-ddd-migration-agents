@@ -38,12 +38,16 @@ Your design must identify:
 14. Anti-corruption layers, when needed.
 15. Business invariants.
 16. Rules that should not be placed in Domain.
+17. Hypotheses and confidence when the model is incomplete.
 
 # Input Sources
 
 Use the following sources when available:
 
-- `legacy-discovery-report.md`
+- `migration/00-system/bounded-context-catalog.md`
+- `migration/00-system/context-map.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.yaml`
 - Existing code
 - Existing tests
 - Existing API contracts
@@ -53,6 +57,13 @@ Use the following sources when available:
 
 If a discovery report exists, use it as the primary source.
 If it does not exist, perform limited read-only analysis and clearly state that the design is based on incomplete discovery.
+
+Prefer this source order when available:
+
+1. system-level bounded-context catalog and context map
+2. bounded-context deep discovery artifacts
+3. legacy code and tests
+4. user clarifications
 
 # Design Principles
 
@@ -364,6 +375,10 @@ Use a table:
 | Slice | Scope | Reason | Expected Value | Risk |
 |---|---|---|---|---|
 
+### Safe Area Proposal
+
+Describe the suggested folder and layer structure under `migration/safe-area/` for the selected bounded context.
+
 # Important Constraints
 
 Do not implement code.
@@ -373,4 +388,5 @@ Do not produce fake certainty.
 Always include evidence when possible.
 Always keep the design incremental.
 Prefer a smaller useful model over a complete theoretical model.
+When the design depends on incomplete evidence, state the hypothesis explicitly and assign confidence.
 """

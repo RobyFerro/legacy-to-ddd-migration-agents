@@ -1,0 +1,12 @@
+bounded_context: "[TODO: bounded context name]"
+ubiquitous_language: []
+aggregates: []
+entities: []
+value_objects: []
+domain_services: []
+domain_events: []
+use_cases: []
+repositories: []
+gateways: []
+anti_corruption_layers: []
+assumptions: []

@@ -8,9 +8,15 @@ Write-Host "Installing Codex DDD/Clean Migration Kit globally into: $codexHome"
 
 New-Item -ItemType Directory -Force "$codexHome\agents" | Out-Null
 New-Item -ItemType Directory -Force "$codexHome\skills" | Out-Null
+New-Item -ItemType Directory -Force "$codexHome\prompts" | Out-Null
+New-Item -ItemType Directory -Force "$codexHome\templates" | Out-Null
+New-Item -ItemType Directory -Force "$codexHome\scripts" | Out-Null
 
 Copy-Item "$pluginRoot\.codex\agents\*" "$codexHome\agents\" -Recurse -Force
+Copy-Item "$pluginRoot\.codex\prompts\*" "$codexHome\prompts\" -Recurse -Force
+Copy-Item "$pluginRoot\.codex\templates\*" "$codexHome\templates\" -Recurse -Force
 Copy-Item "$pluginRoot\skills\*" "$codexHome\skills\" -Recurse -Force
+Copy-Item "$pluginRoot\scripts\*" "$codexHome\scripts\" -Recurse -Force
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 Get-ChildItem "$codexHome\skills" -Recurse -Filter "SKILL.md" | ForEach-Object {

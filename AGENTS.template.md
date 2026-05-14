@@ -1,21 +1,23 @@
-# Legacy to DDD + Clean Architecture Migration
+# Legacy To DDD + Clean Architecture Migration
 
 This repository is being migrated from legacy architecture to Domain-Driven Design and Clean Architecture.
 
-The goal is not to rewrite the whole system at once.
-The goal is to discover, model, migrate, and validate the system incrementally.
+The goal is not a big-bang rewrite.
+The goal is to discover, model, migrate, and validate incrementally using a broad-to-specific workflow.
 
 ## Migration Workflow
 
 The migration must follow this workflow:
 
-1. Discovery
-2. DDD Design
-3. Migration Planning
-4. Implementation
-5. Validation
+1. Broad discovery of the whole legacy system
+2. Identification of candidate bounded contexts and their simple relationship map
+3. Selection of one bounded context
+4. Deep discovery of the selected bounded context
+5. DDD design and migration planning for that bounded context
+6. Implementation of one approved migration slice in the safe area
+7. Validation and artifact update
 
-Do not implement code before Discovery, DDD Design, and Migration Planning have been completed for the selected scope.
+Do not implement code before broad discovery, bounded-context design, and migration planning have been completed for the selected scope.
 
 ## Agent Usage
 
@@ -30,13 +32,15 @@ If the user does not explicitly specify the agent, choose the safest agent for t
 ## General Principles
 
 - Work incrementally.
-- Never migrate the whole application at once.
+- Never migrate the whole application or a whole bounded context at once.
 - Prefer one bounded context, aggregate, use case, feature, or module per iteration.
 - Preserve legacy behavior unless the user explicitly requests a behavior change.
 - Keep changes small, reviewable, and reversible.
 - Always explain architectural decisions.
 - Mark uncertain findings as `Needs human validation`.
+- When information is incomplete, propose explicit hypotheses with a confidence level instead of pretending certainty.
 - Prefer explicit trade-offs over hidden assumptions.
+- Keep discovery and design artifacts traceable to concrete legacy files, methods, SQL, modules, or flows.
 
 ## Legacy Analysis Rules
 
@@ -120,22 +124,36 @@ Prefer simple models over over-engineered models.
 
 Do not create unnecessary aggregates, services, or abstractions.
 
+## Workspace And Artifact Rules
+
+The migration workspace is expected under `migration/`.
+
+The central manifest is `migration/migration-project.yaml`.
+
+System-level artifacts should live under `migration/00-system/`.
+
+Per-bounded-context artifacts should live under `migration/bounded-contexts/<bounded-context-slug>/`.
+
+Safe-area implementation code should live under `migration/safe-area/`.
+
+Keep artifacts updated as the migration evolves.
+
 ## Migration Rules
 
-Before implementation, produce a migration plan.
+Before implementation, produce or update a migration plan.
 
 The migration plan must include:
 
-- Selected scope
-- Reason for selecting that scope
-- Legacy behavior to preserve
-- Files to read
-- Files to create
-- Files to modify
-- Tests to add or update
-- Risks
-- Rollback strategy
-- Definition of Done
+- selected scope
+- reason for selecting that scope
+- legacy behavior to preserve
+- files to read
+- files to create
+- files to modify
+- tests to add or update
+- risks
+- rollback strategy
+- definition of done
 
 During implementation:
 
@@ -145,6 +163,7 @@ During implementation:
 - Keep public contracts stable unless the migration explicitly requires adapters.
 - Add tests around moved business rules whenever possible.
 - Prefer introducing seams and adapters over big-bang rewrites.
+- Implement inside `migration/safe-area/` unless the selected slice explicitly requires a thin integration seam in the legacy code.
 
 ## Validation Rules
 
@@ -168,7 +187,8 @@ Recommended skill usage:
 
 | Phase | Agent | Skills |
 |---|---|---|
-| Legacy discovery | `legacy-discovery` | `legacy-business-logic-extraction` |
+| Broad discovery | `legacy-discovery` | `legacy-business-logic-extraction` |
+| Deep bounded-context discovery | `legacy-discovery` | `legacy-business-logic-extraction` |
 | DDD design | `ddd-design` | `ddd-aggregate-design`, `clean-architecture-boundaries` |
 | Migration planning | `clean-migration-worker` | `migration-slice-planning`, `clean-architecture-boundaries` |
 | Implementation | `clean-migration-worker` | `clean-architecture-boundaries` |
@@ -182,7 +202,7 @@ Recommended skill usage:
 - Use `migration-slice-planning` before implementation to split large scopes into small, safe, reversible migration slices.
 - Use `architecture-validation` after implementation to validate scope, diff, layer dependencies, behavior preservation, tests, and risks.
 
-## Mandatory Agent Workflow for Bounded Context Migration
+## Mandatory Agent Workflow For Bounded Context Migration
 
 When the user asks to plan or execute a migration from legacy architecture to DDD/Clean Architecture for a bounded context, Codex must use the project agents and the appropriate skills.
 
@@ -192,12 +212,13 @@ Example user request:
 
 This request must trigger the following workflow:
 
-1. Use the `legacy-discovery` agent with the `legacy-business-logic-extraction` skill.
-2. Use the `ddd-design` agent with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
-3. Use the `clean-migration-worker` agent with the `migration-slice-planning` skill for planning only.
-4. Stop before implementation unless the user explicitly approves a selected slice.
-5. After approval, use the `clean-migration-worker` agent with `clean-architecture-boundaries` for implementation.
-6. After implementation, use the `clean-migration-worker` agent with `architecture-validation`.
+1. Use the `legacy-discovery` agent with the `legacy-business-logic-extraction` skill for broad discovery if the system map is missing or stale.
+2. Use the `legacy-discovery` agent again for deep bounded-context discovery.
+3. Use the `ddd-design` agent with the `ddd-aggregate-design` and `clean-architecture-boundaries` skills.
+4. Use the `clean-migration-worker` agent with the `migration-slice-planning` skill for planning only.
+5. Stop before implementation unless the user explicitly approves a selected slice.
+6. After approval, use the `clean-migration-worker` agent with `clean-architecture-boundaries` for implementation in the safe area.
+7. After implementation, use the `clean-migration-worker` agent with `architecture-validation`.
 
 ### Planning Requests
 
@@ -212,7 +233,9 @@ then Codex must treat the request as a planning request.
 
 For planning requests:
 
-- use `legacy-discovery`
+- initialize the migration workspace if missing
+- use `legacy-discovery` for broad discovery when needed
+- use `legacy-discovery` again for the selected bounded context
 - then use `ddd-design`
 - then use `clean-migration-worker` only for migration planning
 - do not modify production code
@@ -221,9 +244,15 @@ For planning requests:
 - do not skip design
 - do not skip migration planning
 - produce or update:
-  - `legacy-discovery-report.md`
-  - `ddd-design-proposal.md`
-  - `migration-plan.md`
+  - `migration/migration-project.yaml`
+  - `migration/00-system/bounded-context-catalog.md`
+  - `migration/00-system/bounded-context-catalog.yaml`
+  - `migration/00-system/context-map.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/01-discovery.yaml`
+  - `migration/bounded-contexts/<bounded-context-slug>/02-design.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/02-model.yaml`
+  - `migration/bounded-contexts/<bounded-context-slug>/03-migration-plan.md`
 
 ### Implementation Requests
 
@@ -240,11 +269,12 @@ Implementation rules:
 - preserve legacy behavior
 - do not perform unrelated refactoring
 - keep public contracts unchanged unless explicitly planned
+- prefer implementation inside `migration/safe-area/`
 - produce or update:
-  - `implementation-summary.md`
-  - `validation-report.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/04-implementation-notes.md`
+  - `migration/bounded-contexts/<bounded-context-slug>/05-validation.md`
 
-### Required Final Response for Planning
+### Required Final Response For Planning
 
 At the end of a planning request, Codex must summarize:
 
@@ -275,8 +305,14 @@ Do not hide uncertainty.
 
 The expected reports are:
 
-- `legacy-discovery-report.md`
-- `ddd-design-proposal.md`
-- `migration-plan.md`
-- `implementation-summary.md`
-- `validation-report.md`
+- `migration/migration-project.yaml`
+- `migration/00-system/bounded-context-catalog.md`
+- `migration/00-system/bounded-context-catalog.yaml`
+- `migration/00-system/context-map.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.md`
+- `migration/bounded-contexts/<bounded-context-slug>/01-discovery.yaml`
+- `migration/bounded-contexts/<bounded-context-slug>/02-design.md`
+- `migration/bounded-contexts/<bounded-context-slug>/02-model.yaml`
+- `migration/bounded-contexts/<bounded-context-slug>/03-migration-plan.md`
+- `migration/bounded-contexts/<bounded-context-slug>/04-implementation-notes.md`
+- `migration/bounded-contexts/<bounded-context-slug>/05-validation.md`
