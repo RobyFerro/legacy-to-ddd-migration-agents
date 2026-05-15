@@ -22,17 +22,21 @@ This skill intentionally adopts and adapts a selective subset of rules inspired 
 
 Use this skill when the task involves:
 
-- implementing a migration slice
-- reviewing code written in the safe area
-- extracting business logic from legacy modules
-- moving orchestration out of UI or infrastructure
+- implementing a scope in the new target system
+- reviewing code in the new target project
 - creating new Domain/Application/Infrastructure/Presentation code
 - validating whether a new abstraction is honest and justified
 
-Typical agents:
+## Required Inputs
 
-- `target-build-worker`
-- `ddd-design`, only when proposing implementation-oriented structure
+Before starting, read:
+- Original legacy source code for the relevant scope (read-only — primary evidence)
+- `migration/migration-project.yaml` (if it exists)
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md` (if it exists)
+- `migration/bounded-contexts/[slug]/02-design/design.md` (if it exists)
+- `migration/bounded-contexts/[slug]/03-develop/develop.md` (if it exists)
+
+Always check both the legacy source and any existing artifacts. Artifacts may be incomplete or absent — fall back to the legacy source as ground truth.
 
 ## Core Principle
 

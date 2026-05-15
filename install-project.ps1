@@ -11,4 +11,9 @@ param(
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $delegateScript = Join-Path $scriptRoot "scripts\install-project.ps1"
 
-& $delegateScript -TargetRepo $TargetRepo @( if ($OverwriteAgentsMd) { "-OverwriteAgentsMd" } )
+$params = @{ TargetRepo = $TargetRepo }
+if ($OverwriteAgentsMd) {
+    $params['OverwriteAgentsMd'] = $true
+}
+
+& $delegateScript @params

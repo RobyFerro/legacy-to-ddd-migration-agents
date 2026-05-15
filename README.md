@@ -1,163 +1,104 @@
-# Codex Legacy-Informed DDD/Clean Design Kit
+# DDD Clean Design Migration Plugin
 
-Reusable Codex plugin for broad-to-specific discovery and target-system design starting from a legacy codebase.
+Analyze a legacy system and build a new DDD/Clean Architecture system from scratch — guided by what the legacy code reveals about business intent.
 
-This repository is also a Codex plugin marketplace repository. The distributable plugin lives in `plugins/ddd-clean-migration`, and the marketplace entry lives in `.agents/plugins/marketplace.json`.
+## How It Works
 
-## What The Plugin Does
+The plugin guides you through three phases:
 
-The plugin guides the team through these phases:
+1. **Discovery** — Read legacy code to extract business rules, identify business areas, and map domain boundaries
+2. **Design** — Transform findings into a DDD model with aggregates, entities, repositories, and layer boundaries
+3. **Develop** — Build the new system as greenfield code, organized into Domain, Application, and Infrastructure layers
 
-1. broad discovery of the legacy system
-2. optional deep discovery of selected bounded contexts
-3. DDD/Clean design synthesis
-4. greenfield develop phase for the selected target scope
+Legacy code is read-only evidence. The new system is built independently under `migration/new-projects/`.
 
-The core purpose is advisory.
-The agent should help the user make better decisions.
-The user decides when a phase starts or ends.
+## Getting Started
 
-The workflow must always preserve these three phases:
+### Phase 1: Analyze the Legacy System
 
-- `DISCOVERY`
-- `DESIGN`
-- `DEVELOP`
+Start with the full codebase:
 
-Discovery is evidence gathering.
-It is not a request to fix the legacy codebase.
-
-## Quick Start: Choose Your Phase
-
-**New to this plugin?** Start here:
-
-- **[Discovery Playbook](plugins/ddd-clean-migration/.codex/prompts/discovery-playbook.md)** — Extract evidence from the legacy system. Read-only analysis of business logic, bounded contexts, and dependencies.
-- **[Design Playbook](plugins/ddd-clean-migration/.codex/prompts/design-playbook.md)** — Transform discovery into a target DDD/Clean Architecture design. Define aggregates, entities, and layer boundaries.
-- **[Develop Playbook](plugins/ddd-clean-migration/.codex/prompts/develop-playbook.md)** — Build the new greenfield target system based on design. Clean Architecture implementation only.
-
-Each playbook includes:
-- Readiness checklist for that phase
-- Copy-paste ready prompt to start immediately
-- Links to complete rules and reference material
-
-## Design Stance
-
-- legacy code is a source of truth about business reality
-- discovery findings are decision inputs, not remediation tasks
-- legacy weaknesses should be described as `legacy signals`, `design pressures`, or `domain ambiguities`
-- bounded contexts should be prioritized by domain centrality
-- the target is a new system, not an incremental cleanup of the old one
-
-## Main Outputs
-
-The plugin should help produce:
-
-- a system bounded-context catalog
-- a context map
-- per-bounded-context discovery reports
-- per-bounded-context DDD/Clean design reports
-- target model definitions
-- develop-phase delivery reports
-- develop-phase validation reports
-- open-question backlogs for human validation
-
-Suggested artifact structure:
-
-- `migration/00-system/`
-- `migration/bounded-contexts/<slug>/01-discovery/`
-- `migration/bounded-contexts/<slug>/02-design/`
-- `migration/bounded-contexts/<slug>/03-develop/`
-
-## Repository Layout
-
-- `.agents/plugins/marketplace.json`: marketplace catalog entry for Codex
-- `plugins/ddd-clean-migration/.codex-plugin/plugin.json`: distributable plugin manifest
-- `plugins/ddd-clean-migration/.codex/`: bundled agents, prompts, and templates
-- `plugins/ddd-clean-migration/skills/`: bundled skills
-- `plugins/ddd-clean-migration/scripts/`: bundled helper scripts
-- `install-global.ps1`, `install-project.ps1`, `update-global-clean.ps1`: repository-level install helpers
-
-## Bundled Agent Profiles
-
-- `legacy-discovery`
-- `ddd-design`
-- `target-build-worker`
-
-`target-build-worker` remains available for optional target-project delivery work, but it should not drive discovery or post-discovery recommendations.
-
-## Bundled Skills
-
-- `legacy-business-logic-extraction`
-- `ddd-aggregate-design`
-- `clean-architecture-boundaries`
-- `migration-slice-planning`
-- `architecture-validation`
-- `migration-code-guardrails`
-
-Some skill names remain legacy for backward compatibility.
-The expected behavior is still greenfield target design first, not incremental migration guidance.
-
-## Subagent Runtime Note
-
-As of May 14, 2026, Codex Desktop exposes built-in `spawn_agent` roles such as `explorer` and `worker`.
-
-Recommended delegation mapping:
-
-- `legacy-discovery` -> `explorer` + `legacy-business-logic-extraction`
-- `ddd-design` -> `explorer` + `ddd-aggregate-design` + `clean-architecture-boundaries`
-- `target-build-worker` -> `worker` only when the user explicitly starts delivery for the new target project
-
-## Make It Available In Codex
-
-Add this marketplace to your `~/.codex/config.toml`:
-
-```toml
-[marketplaces.legacy-to-ddd-migration-agents]
-source_type = "git"
-source = "https://github.com/RobyFerro/legacy-to-ddd-migration-agents.git"
-ref = "master"
+```
+Analyze this legacy repository to identify its main business areas,
+business rules, and domain boundaries.
 ```
 
-Then restart Codex. The plugin will appear as `ddd-clean-migration`.
+After the first pass, go deeper on a specific area:
 
-## Install Globally
-
-```powershell
-.\install-global.ps1
+```
+Analyze the [area name] in more detail. I want to understand its
+business flows, entities, rules, and dependencies.
 ```
 
-## Install Into A Project
+### Phase 2: Design the New System
 
-```powershell
-.\install-project.ps1 -TargetRepo "C:\path\to\target-repo"
+Once discovery is complete for an area:
+
+```
+Design a DDD/Clean Architecture model for the [area] based on what was found.
 ```
 
- This installs:
- 
- - `.codex/skills`
- - `.codex/prompts`
- - `.codex/templates`
- - `.codex/scripts`
- - `AGENTS.md`
- - `migration/` bootstrap workspace for phase artifacts
+### Phase 3: Build
 
- To overwrite an existing `AGENTS.md`:
+Once design is approved, implement one scope at a time:
 
-```powershell
- .\install-project.ps1 -TargetRepo "C:\path\to\target-repo" -OverwriteAgentsMd
- ```
+```
+Implement the domain model for [aggregate] — entities, value objects, and invariants.
+```
 
-Important:
+```
+Implement the [use case name] use case in the application layer.
+```
 
-- the plugin does not use `docs/` as its default artifact root
-- discovery, design, and develop artifacts are expected under `migration/`
-- broad discovery should update system-level files under `migration/00-system/`
-- per-bounded-context artifacts are created when a bounded context is selected or analyzed deeply enough
+```
+Implement the repository adapter for [aggregate].
+```
 
-## For More Details
+Each phase produces artifacts under `migration/` that the next phase uses.
 
-- **Phase-specific guidance:** See the playbooks above (discovery, design, develop)
-- **Complete rules and reference:** See `AGENTS.md` after installation in your project
-  - Agent behavioral rules
-  - Artifact ownership matrix
-  - Readiness criteria details
-  - Clean Architecture and DDD rules
+## Artifacts
+
+```
+migration/
+├── 00-system/
+│   ├── bounded-context-catalog.md
+│   └── context-map.md
+├── bounded-contexts/
+│   └── [area-slug]/
+│       ├── 01-discovery/
+│       ├── 02-design/
+│       └── 03-develop/
+└── new-projects/
+    └── [area-slug]/
+        └── src/
+            ├── Domain/
+            ├── Application/
+            ├── Infrastructure/
+            └── Presentation/
+```
+
+## Principles
+
+- **Legacy is evidence, not remediation.** Read the legacy system to understand business intent. Never modify it.
+- **Greenfield only.** The new system is independent code. No strangler pattern, no incremental extraction.
+- **Design before code.** Discovery and Design are read-only. Code only after design is approved.
+- **Source is ground truth.** Discovery artifacts are interpretations. Original source code always takes precedence.
+- **Pragmatic DDD.** Prefer a smaller useful model over a complete theoretical one.
+
+## Skills Reference
+
+| Skill | Purpose |
+|---|---|
+| `broad-discovery` | Analyze the full legacy system for business area boundaries |
+| `deep-discovery` | Analyze one area in depth for aggregate and entity candidates |
+| `design-synthesis` | Design the target DDD/Clean model from discovery findings |
+| `target-implementation` | Build the new system based on design specifications |
+| `legacy-business-logic-extraction` | Find hidden business logic in code |
+| `ddd-aggregate-design` | Define DDD patterns (aggregates, entities, value objects) |
+| `clean-architecture-boundaries` | Classify responsibilities into layers |
+| `architecture-validation` | Audit code for layer boundary violations |
+| `migration-code-guardrails` | Enforce clean boundaries during implementation |
+
+## License
+
+MIT — See LICENSE file in repository

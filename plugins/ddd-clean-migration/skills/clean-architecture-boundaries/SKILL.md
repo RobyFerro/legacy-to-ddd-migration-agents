@@ -16,16 +16,20 @@ Use this skill when the task involves:
 - Clean Architecture design
 - DDD migration
 - layer responsibility classification
-- migration planning
 - implementation review
 - checking if code belongs in Domain, Application, Infrastructure, or Presentation
-- extracting logic from ViewModels, services, repositories, or adapters
+- classifying discovered logic from legacy code
 
-Typical agents:
+## Required Inputs
 
-- `ddd-design`
-- `target-build-worker`
-- `legacy-discovery`, only when classifying discovered logic
+Before starting, read:
+- Original legacy source code for the relevant scope (read-only — primary evidence)
+- `migration/migration-project.yaml` (if it exists)
+- `migration/00-system/bounded-context-catalog.md` (if it exists)
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md` (if it exists)
+- `migration/bounded-contexts/[slug]/02-design/design.md` (if it exists)
+
+Always check both the legacy source and any existing artifacts. Artifacts may be incomplete or absent — fall back to the legacy source as ground truth.
 
 ## Core Principle
 
@@ -249,17 +253,14 @@ Repositories should mostly:
 
 ## Safety Rules
 
-Do not move code just because it is currently in the wrong layer.
+When classifying responsibilities, identify first:
 
-First identify:
+- what behavior the code encodes
+- which layer owns that responsibility
+- what ports or adapters are needed
+- what risks exist in the placement decision
 
-- behavior to preserve
-- tests needed
-- target owner
-- adapter needed
-- rollback strategy
-
-Prefer incremental extraction over big rewrites.
+The new system is built as independent greenfield code. Do not design around extracting or migrating the legacy system incrementally.
 
 ## Final Checklist
 

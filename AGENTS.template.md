@@ -176,6 +176,18 @@ When a specific bounded context is analyzed in enough depth, also create or upda
 - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.md`
 - `migration/bounded-contexts/<bounded-context-slug>/01-discovery/discovery.yaml`
 
+## Source Reference Policy
+
+In all phases, agents must read the original legacy source code as a mandatory co-reference alongside phase artifacts.
+
+- In DISCOVERY: legacy source is the primary input (entire mission is source code analysis)
+- In DESIGN: discovery artifacts provide interpretation and summarization; legacy source code verifies those findings and fills gaps
+- In DEVELOP: design artifacts define the target model; legacy source code validates that the implementation correctly represents legacy behavior
+
+**Key principle:** Reading artifacts without cross-checking against the source is not sufficient. Artifacts encode a team's interpretation at a point in time. The source is always more current and more authoritative.
+
+**Conflict resolution:** When an artifact and the source code contradict each other, the source code takes precedence. Raise the contradiction explicitly and state that the implementation follows the source.
+
 ## Mandatory Behavioral Rules
 
 When responding after discovery:

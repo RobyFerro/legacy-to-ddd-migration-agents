@@ -21,11 +21,15 @@ Use this skill when the task involves:
 - identifying business logic hotspots
 - separating domain rules from application, infrastructure, and UI logic
 
-Typical agents:
+## Required Inputs
 
-- `legacy-discovery`
-- `ddd-design`, only when validating discovered rules
-- `target-build-worker`, only when reviewing whether a planned migration missed rules
+Before starting, read:
+- Original legacy source code for the relevant scope (read-only — primary evidence)
+- `migration/migration-project.yaml` (if it exists)
+- `migration/00-system/bounded-context-catalog.md` (if it exists)
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md` (if it exists)
+
+Always check both the legacy source and any existing artifacts. Artifacts may be incomplete or absent — fall back to the legacy source as ground truth.
 
 ## Core Principle
 
@@ -149,22 +153,6 @@ When useful, also produce:
 
 | Question | Why It Matters | Evidence |
 |---|---|---|
-
-## Rules for DocuMiner
-
-For this repository, pay special attention to:
-
-- WPF ViewModels that orchestrate business workflows.
-- Filesystem operations that encode product behavior.
-- PDF import/export rules.
-- Template document lifecycle rules.
-- Field extraction and page-specific behavior.
-- Python transform behavior.
-- Graph/script execution rules.
-- SQL query and data browser behavior.
-- Licensing gates and duplicated capability rules.
-- Repository methods that do more than persistence.
-- Compatibility code that preserves legacy behavior.
 
 ## Safety Rules
 

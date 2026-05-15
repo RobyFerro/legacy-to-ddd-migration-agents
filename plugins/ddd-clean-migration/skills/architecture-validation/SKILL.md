@@ -1,11 +1,11 @@
 ---
 name: architecture-validation
-description: Use this skill after an implementation or migration slice to validate Clean Architecture boundaries, DDD consistency, changed files, tests, build result, legacy behavior preservation, and remaining risks.
+description: Use this skill to validate that implemented code respects Clean Architecture boundaries, DDD consistency, and design specifications. Audits layer dependencies, Domain purity, test coverage, build results, and behavior preservation without writing code.
 ---
 
 # Architecture Validation
 
-Use this skill after a migration slice has been implemented.
+Use this skill to audit code after implementation or to validate a code change against Clean Architecture and DDD rules.
 
 The goal is to verify that the change is small, coherent, reversible, and aligned with DDD + Clean Architecture.
 
@@ -13,18 +13,25 @@ The goal is to verify that the change is small, coherent, reversible, and aligne
 
 Use this skill when the task involves:
 
-- validating a migration slice
-- reviewing a git diff
-- checking layer boundaries
-- checking Domain purity
-- checking whether the implementation respected the migration plan
+- validating implemented code against Clean Architecture rules
+- reviewing a git diff or changed files
+- checking layer boundaries and Domain purity
+- checking whether the implementation matches the design specification
 - identifying behavior regressions
 - distinguishing new failures from pre-existing failures
 - producing a validation report
 
-Typical agents:
+## Required Inputs
 
-- `target-build-worker`
+Before starting, read:
+- Original legacy source code for the relevant scope (read-only — verify behavior preservation)
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md` (if it exists)
+- `migration/bounded-contexts/[slug]/02-design/design.md` (if it exists)
+- `migration/bounded-contexts/[slug]/03-develop/develop.md` (if it exists)
+- Current git diff and changed files
+- Build output and test output (if available)
+
+Always check both the legacy source and any existing artifacts. Artifacts may be incomplete or absent — fall back to the legacy source as ground truth.
 
 ## Core Principle
 
@@ -43,14 +50,11 @@ Validate:
 
 When available, read:
 
-- `legacy-discovery-report.md`
-- `ddd-design-proposal.md`
-- `migration-plan.md`
-- `implementation-summary.md`
-- current git diff
-- changed files
-- test output
-- build output
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md`
+- `migration/bounded-contexts/[slug]/02-design/design.md`
+- `migration/bounded-contexts/[slug]/03-develop/develop.md`
+- current git diff and changed files
+- test output and build output
 - existing architecture tests
 
 ## Validation Checklist
@@ -83,7 +87,7 @@ This skill focuses on *validating* layer boundaries in code reviews and pull req
 When reviewing the diff:
 
 1. List all changed files.
-2. Compare changed files with `migration-plan.md`.
+2. Compare changed files with the approved design scope (`design.md` and `develop.md`).
 3. Identify unexpected files.
 4. For each changed file, explain the purpose of the change.
 5. Check whether behavior changed intentionally or accidentally.

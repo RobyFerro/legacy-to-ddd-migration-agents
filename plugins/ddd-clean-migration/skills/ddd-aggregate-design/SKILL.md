@@ -23,10 +23,16 @@ Use this skill when the task involves:
 - evaluating whether a concept should be an aggregate, entity, value object, domain service, or application use case
 - reviewing proposed aggregate designs
 
-Typical agents:
+## Required Inputs
 
-- `ddd-design`
-- `target-build-worker`, only when implementing or reviewing a migration slice involving Domain model changes
+Before starting, read:
+- Original legacy source code for the relevant scope (read-only — primary evidence)
+- `migration/migration-project.yaml` (if it exists)
+- `migration/00-system/bounded-context-catalog.md` (if it exists)
+- `migration/bounded-contexts/[slug]/01-discovery/discovery.md` (if it exists)
+- `migration/bounded-contexts/[slug]/02-design/design.md` (if it exists)
+
+Always check both the legacy source and any existing artifacts. Artifacts may be incomplete or absent — fall back to the legacy source as ground truth.
 
 ## Core Principle
 
@@ -252,20 +258,6 @@ Avoid:
 - domain service containing all business logic
 - value objects with no validation or meaning
 - domain events used only because they seem architectural
-
-## DocuMiner-Specific Guidance
-
-For DocuMiner:
-
-- `ExtractionTemplate` is a strong aggregate candidate when dealing with template identity, fields, documents, rules, and lifecycle.
-- `TemplateDocument` is likely an entity inside `ExtractionTemplate` if its lifecycle is owned by the template.
-- File copying/deleting is not Domain; it belongs to Infrastructure.
-- Deciding that a template owns a document is Domain/Application depending on invariant.
-- Collision-safe filename generation is probably Infrastructure behavior preserving legacy storage semantics, unless the product treats the name as a business concept.
-- Licensing checks are Application orchestration using the Licensing BC.
-- WPF picker/progress/dialog behavior stays Presentation.
-- PDF/OCR/table extraction execution is not part of the aggregate itself.
-- Browser/read models should not automatically become aggregates.
 
 ## Final Checklist
 
