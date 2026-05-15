@@ -33,14 +33,14 @@ Use the appropriate project agent profile depending on the task:
 
 - Use `legacy-discovery` to analyze the legacy repository and extract domain evidence.
 - Use `ddd-design` to transform discovered evidence into a target DDD/Clean design.
-- Use `clean-migration-worker` only if the user explicitly starts a delivery/build phase for the new target project.
+- Use `target-build-worker` only if the user explicitly starts a delivery/build phase for the new target project.
 
 Codex may not expose these profile names as direct `spawn_agent.agent_type` values.
 When delegating, prefer this runtime mapping unless the current Codex build explicitly supports the custom type:
 
 - `legacy-discovery` -> `explorer` plus `legacy-business-logic-extraction`
 - `ddd-design` -> `explorer` plus `ddd-aggregate-design` and `clean-architecture-boundaries`
-- `clean-migration-worker` -> `worker` plus the phase-appropriate implementation skill, only for the new target project
+- `target-build-worker` -> `worker` plus the phase-appropriate implementation skill, only for the new target project
 
 During broad discovery, the main agent remains responsible for identifying candidate bounded contexts and deciding whether dedicated deep discovery can be delegated safely.
 The system may offer parallel deep discovery when that improves evidence quality.
@@ -212,3 +212,71 @@ When closing a discovery or design task, summarize:
 - open questions
 - recommended next decision for the user
 - confirmation that no legacy remediation was performed
+
+---
+
+## Phase Readiness Criteria
+
+### DISCOVERY → DESIGN Readiness
+
+Before moving from DISCOVERY to DESIGN, confirm:
+
+- System-level bounded-context catalog has been created (`migration/00-system/bounded-context-catalog.md`)
+- At least 3 candidate bounded contexts have been identified
+- Confidence level for each BC is at least Medium
+- Main application flows have been documented for each candidate BC
+- Business logic classification table has at least one entry per BC
+- Open questions that block design decisions are explicitly listed
+- No unbounded scope creep during discovery
+
+### DESIGN → DEVELOP Readiness
+
+Before moving from DESIGN to DEVELOP, confirm:
+
+- At least one bounded context has a complete design document (`02-design/design.md`)
+- Aggregate definitions are explicit (aggregate roots, entities, value objects)
+- Business rule placement table is populated (legacy location → target layer)
+- Application use cases are defined for the selected build scope
+- Repository interfaces and external gateways are identified
+- No unresolved "Unknown / Needs human validation" items that block the selected scope
+- Clean Architecture layer dependency rules are understood
+
+---
+
+## Artifact Ownership Matrix
+
+| Artifact | Created/Updated By | Read By | Conflict Rule |
+|---|---|---|---|
+| `migration-project.yaml` | legacy-discovery, ddd-design, target-build-worker | all agents | Last writer owns; append version field on conflict |
+| `00-system/bounded-context-catalog.md` | legacy-discovery | ddd-design | ddd-design reads only; never overwrites |
+| `00-system/bounded-context-catalog.yaml` | legacy-discovery | ddd-design | ddd-design reads only; never overwrites |
+| `00-system/context-map.md` | legacy-discovery | ddd-design | ddd-design reads only; never overwrites |
+| `[slug]/01-discovery/discovery.md` | legacy-discovery | ddd-design | ddd-design reads only; never modifies |
+| `[slug]/01-discovery/discovery.yaml` | legacy-discovery | ddd-design | ddd-design reads only; never modifies |
+| `[slug]/02-design/design.md` | ddd-design | target-build-worker | target-build-worker reads only; never modifies |
+| `[slug]/02-design/model.yaml` | ddd-design | target-build-worker | target-build-worker reads only; never modifies |
+| `[slug]/03-develop/develop.md` | target-build-worker | — | Append-only; update with session summaries |
+| `[slug]/03-develop/validation.md` | target-build-worker | — | Overwrite per validation run |
+
+---
+
+## Agent Selection Guide
+
+Use this table to choose which agent profile and skills to invoke for each task:
+
+| Task | Agent Profile | Map to Codex Built-In | Required Skills | When to Use |
+|---|---|---|---|---|
+| Broad legacy discovery | `legacy-discovery` | `explorer` | `legacy-business-logic-extraction` | Start of DISCOVERY phase; analyze entire legacy system |
+| Deep bounded-context discovery | `legacy-discovery` | `explorer` | `legacy-business-logic-extraction` | During DISCOVERY; focus on one or more selected BCs |
+| DDD/Clean design synthesis | `ddd-design` | `explorer` | `ddd-aggregate-design`, `clean-architecture-boundaries` | During DESIGN phase; transform discovery into target model |
+| Architecture review | `target-build-worker` | `worker` | `clean-architecture-boundaries`, `architecture-validation` | Validate that delivered code respects Clean Architecture |
+| Target system implementation | `target-build-worker` | `worker` | `clean-architecture-boundaries`, `architecture-validation`, `migration-code-guardrails` | During DEVELOP phase; build new target project |
+
+### Codex Runtime Notes
+
+As of May 2026, Codex Desktop and other Codex implementations expose built-in agent types:
+
+- `explorer`: read-only analysis agent; ideal for discovery and design
+- `worker`: workspace-write agent; needed for implementation and code modifications
+
+When spawning subagents, map custom profile names to these standard types. If your Codex version supports custom profile names directly (e.g., `spawn_agent(agent_type="legacy-discovery")`), use them. Otherwise, use the Codex built-in names and combine with the required skills list.

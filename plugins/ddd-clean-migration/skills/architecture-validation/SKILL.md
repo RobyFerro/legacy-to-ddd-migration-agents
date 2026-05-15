@@ -24,7 +24,7 @@ Use this skill when the task involves:
 
 Typical agents:
 
-- `clean-migration-worker`
+- `target-build-worker`
 
 ## Core Principle
 
@@ -72,103 +72,11 @@ Check:
 - Are failures related to the slice or pre-existing?
 - Is rollback simple?
 
-## Layer Validation Rules
+## Layer Responsibility Reference
 
-### Domain
+For comprehensive layer definitions and responsibilities, see the `clean-architecture-boundaries` skill.
 
-Domain must not depend on:
-
-- Application
-- Infrastructure
-- Presentation
-- WPF
-- EF Core
-- SQL
-- SQLite
-- filesystem
-- PDF/OCR libraries
-- Python execution
-- dependency injection
-- logging implementation
-- external service SDKs
-
-Domain may contain:
-
-- aggregates
-- entities
-- value objects
-- domain services
-- domain policies
-- domain events when useful
-- business invariants
-- pure business behavior
-
-### Application
-
-Application may contain:
-
-- use cases
-- commands
-- queries
-- handlers
-- ports/interfaces
-- orchestration
-- application DTOs
-- calls to Domain
-- calls to repositories/gateways through abstractions
-
-Application must not contain:
-
-- EF Core implementation
-- SQL implementation
-- filesystem implementation
-- WPF dialogs
-- UI progress windows
-- direct PDF/OCR/Python implementation
-- core business invariants that belong in Domain
-
-### Infrastructure
-
-Infrastructure may contain:
-
-- repository implementations
-- EF Core DbContext
-- SQL
-- filesystem adapters
-- PDF/OCR/Python adapters
-- external library integrations
-- export implementations
-- technical compatibility logic
-
-Infrastructure must not own:
-
-- domain policy
-- business invariants
-- use case decisions
-- UI behavior
-
-### Presentation
-
-Presentation may contain:
-
-- WPF views
-- ViewModels
-- UI commands
-- picker dialogs
-- progress windows
-- notifications
-- display formatting
-- selection state
-- refresh triggers
-
-Presentation must not own:
-
-- business invariants
-- repository rules
-- filesystem lifecycle
-- licensing policies
-- import/delete orchestration
-- batch processing workflow
+This skill focuses on *validating* layer boundaries in code reviews and pull requests using those definitions.
 
 ## Diff Review Method
 
@@ -281,22 +189,6 @@ When reporting findings, use:
 
 | Severity | Finding | File | Evidence | Recommendation |
 |---|---|---|---|---|
-
-## DocuMiner-Specific Validation
-
-Pay special attention to:
-
-- WPF ViewModels gaining or retaining orchestration that should move to Application.
-- Infrastructure services owning business rules.
-- Repository methods doing workflow decisions.
-- Domain depending on technical libraries.
-- Licensing rules duplicated outside `LicensePolicy`.
-- Template document filesystem behavior changing unintentionally.
-- `%AppData%\\payslippy\\files\\{templateId}` path behavior.
-- Collision-safe naming behavior.
-- Batch extraction behavior accidentally affected.
-- Python/SQL execution behavior accidentally affected.
-- EF schema changes introduced without explicit planning.
 
 ## Build/Test Failure Classification
 

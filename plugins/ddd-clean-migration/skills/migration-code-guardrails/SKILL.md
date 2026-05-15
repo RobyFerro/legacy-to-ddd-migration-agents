@@ -31,7 +31,7 @@ Use this skill when the task involves:
 
 Typical agents:
 
-- `clean-migration-worker`
+- `target-build-worker`
 - `ddd-design`, only when proposing implementation-oriented structure
 
 ## Core Principle

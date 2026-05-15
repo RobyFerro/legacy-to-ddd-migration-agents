@@ -25,4 +25,4 @@ Get-ChildItem "$codexHome\skills" -Recurse -Filter "SKILL.md" | ForEach-Object {
 
 Write-Host "Global installation completed."
 Write-Host "Note: current Codex Desktop runtimes delegate with built-in subagent roles such as explorer/worker."
-Write-Host "Use the installed skills and AGENTS guidance to make subagents act as legacy-discovery, ddd-design, or clean-migration-worker for target-project delivery only."
+Write-Host "Use the installed skills and AGENTS guidance to make subagents act as legacy-discovery, ddd-design, or target-build-worker for target-project delivery only."

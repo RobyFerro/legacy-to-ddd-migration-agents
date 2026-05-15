@@ -26,7 +26,7 @@ Use this skill when the task involves:
 Typical agents:
 
 - `ddd-design`
-- `clean-migration-worker`, only when implementing or reviewing a migration slice involving Domain model changes
+- `target-build-worker`, only when implementing or reviewing a migration slice involving Domain model changes
 
 ## Core Principle
 

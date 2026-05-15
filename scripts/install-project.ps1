@@ -24,6 +24,8 @@ Copy-Item "$pluginRoot\.codex\templates\*" "$targetRoot\.codex\templates\" -Recu
 Copy-Item "$pluginRoot\skills\*" "$targetRoot\.codex\skills\" -Recurse -Force
 Copy-Item "$pluginRoot\scripts\*" "$targetRoot\.codex\scripts\" -Recurse -Force
 
+& "$pluginRoot\scripts\initialize-migration-workspace.ps1" -TargetRepo $targetRoot | Out-Null
+
 $agentsTarget = "$targetRoot\AGENTS.md"
 if (!(Test-Path $agentsTarget) -or $OverwriteAgentsMd) {
     Copy-Item "$sourceRoot\AGENTS.template.md" $agentsTarget -Force
@@ -39,5 +41,6 @@ Get-ChildItem "$targetRoot\.codex\skills" -Recurse -Filter "SKILL.md" | ForEach-
 }
 
 Write-Host "Installation completed."
+Write-Host "Migration workspace initialized under: $targetRoot\migration"
 Write-Host "Note: current Codex Desktop runtimes delegate with built-in subagent roles such as explorer/worker."
-Write-Host "Use the installed skills and AGENTS.md guidance to make subagents act as legacy-discovery, ddd-design, or clean-migration-worker for target-project delivery only."
+Write-Host "Use the installed skills and AGENTS.md guidance to make subagents act as legacy-discovery, ddd-design, or target-build-worker for target-project delivery only."

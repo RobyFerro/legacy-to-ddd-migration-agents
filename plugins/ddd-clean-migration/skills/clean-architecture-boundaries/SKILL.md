@@ -24,7 +24,7 @@ Use this skill when the task involves:
 Typical agents:
 
 - `ddd-design`
-- `clean-migration-worker`
+- `target-build-worker`
 - `legacy-discovery`, only when classifying discovered logic
 
 ## Core Principle
@@ -55,22 +55,16 @@ Domain can contain:
 
 Domain must not contain:
 
-- EF Core
-- SQL
-- SQLite
-- WPF
+- ORMs or database libraries
+- SQL or database queries
 - file system access
-- PDF libraries
-- OCR libraries
-- Python execution
 - HTTP calls
+- external service SDKs
 - queues
 - email
 - logging implementation
 - dependency injection
-- application configuration
-- UI dialogs
-- progress windows
+- UI libraries or dialogs
 - request/response DTOs
 - infrastructure adapters
 
@@ -99,12 +93,10 @@ Application can contain:
 Application must not contain:
 
 - core business invariants
-- EF Core implementation details
-- SQL implementation details
+- ORM or database implementation details
 - filesystem implementation details
-- WPF-specific code
-- direct PDF/OCR/Python implementation
-- UI dialogs or view state
+- UI implementation
+- direct external service calls (use adapters instead)
 - technical adapter implementation
 
 ### Infrastructure
@@ -114,18 +106,11 @@ Infrastructure contains technical details and adapters.
 Infrastructure can contain:
 
 - repository implementations
-- EF Core DbContext and mappings
-- SQL execution
-- SQLite-specific code
-- filesystem storage
-- PDF reading/rendering
-- OCR implementation
-- Python process execution
-- external library adapters
-- export implementation
+- ORM/database code and mappings
+- filesystem adapters
+- external service adapters
 - email implementation
 - queue implementation
-- license library integration
 - compatibility migrations
 - technical configuration adapters
 
@@ -143,28 +128,23 @@ Presentation contains UI and user interaction.
 
 Presentation can contain:
 
-- WPF Views
-- ViewModels
-- commands bound to UI
-- picker dialogs
-- progress windows
-- confirmation dialogs
+- UI views or components
+- ViewModels or controllers
+- UI commands or handlers
+- dialogs or modals
 - user notifications
 - UI state
 - UI-only validation
 - formatting for display
 - selection state
-- refresh triggers
+- interaction handlers
 
 Presentation must not own:
 
 - business invariants
-- filesystem lifecycle
 - persistence logic
 - repository rules
-- batch processing logic
-- licensing policy rules
-- document import orchestration beyond UI interaction
+- use case orchestration
 
 ## Classification Method
 
@@ -209,20 +189,20 @@ When useful, also include:
 
 ## Common Migration Moves
 
-### From ViewModel to Application
+### From ViewModel/Controller to Application
 
-Move to Application when a ViewModel:
+Move to Application when a ViewModel/Controller:
 
 - coordinates a multi-step use case
 - calls repositories directly
-- performs import/delete workflows
-- applies licensing before use case execution
+- performs resource creation/deletion workflows
+- applies policy checks before use case execution
 - decides persistence sequence
 - handles domain operation results
 
-Keep in ViewModel:
+Keep in ViewModel/Controller:
 
-- picker dialogs
+- dialogs or forms
 - progress UI
 - selected items
 - refresh commands
@@ -266,60 +246,6 @@ Repositories should mostly:
 - query
 - map persistence models
 - handle database-specific details
-
-## DocuMiner-Specific Classification
-
-### Domain
-
-Examples likely belonging to Domain:
-
-- template owns documents
-- template field validation
-- page rule invariants
-- graph structural invariants
-- license capability policy
-- aggregate state transitions
-
-### Application
-
-Examples likely belonging to Application:
-
-- import template documents
-- delete template documents
-- run extraction workflow
-- apply licensing before import/extraction
-- execute graph as part of a use case
-- compose results for UI
-- coordinate repository + filesystem + domain
-
-### Infrastructure
-
-Examples likely belonging to Infrastructure:
-
-- copy PDF to `%AppData%\\payslippy\\files\\{templateId}`
-- collision-safe physical filename resolution
-- delete physical files
-- SQLite queries
-- EF Core persistence
-- PDF text extraction
-- OCR
-- ONNX table recognition
-- Python process execution
-- CSV/Excel export implementation
-- Standard.Licensing integration
-
-### Presentation
-
-Examples likely belonging to Presentation:
-
-- file/folder picker
-- progress window
-- WPF dialogs
-- selected document state
-- tab opening
-- UI refresh
-- visual bounding boxes
-- warning display
 
 ## Safety Rules
 

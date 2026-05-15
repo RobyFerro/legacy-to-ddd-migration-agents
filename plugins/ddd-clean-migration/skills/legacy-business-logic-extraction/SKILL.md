@@ -25,7 +25,7 @@ Typical agents:
 
 - `legacy-discovery`
 - `ddd-design`, only when validating discovered rules
-- `clean-migration-worker`, only when reviewing whether a planned migration missed rules
+- `target-build-worker`, only when reviewing whether a planned migration missed rules
 
 ## Core Principle
 

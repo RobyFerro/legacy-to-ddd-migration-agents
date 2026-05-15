@@ -23,7 +23,7 @@ Use this skill when the task involves:
 
 Typical agents:
 
-- `clean-migration-worker`
+- `target-build-worker`
 - `ddd-design`, only when recommending migration slices
 
 ## Core Principle
@@ -306,49 +306,6 @@ Avoid plans that say:
 - change behavior while changing architecture
 
 If the requested scope is too large, split it.
-
-## DocuMiner-Specific Guidance
-
-For DocuMiner, prefer these slice shapes:
-
-### Licensing
-
-Good first slice:
-
-- make `LicenseService` delegate policy checks to `LicensePolicy`
-- keep `ILicenseService` unchanged
-- no UI changes
-
-### DocumentMining / Template Documents
-
-Do not implement full lifecycle in one slice unless explicitly approved.
-
-Prefer:
-
-1. Domain behavior on `ExtractionTemplate` / `TemplateDocument`
-2. Application use case for import/list
-3. Filesystem storage adapter
-4. ViewModel delegation for import
-5. Application use case for delete
-6. ViewModel delegation for delete
-
-### DocumentMining / Field Rules
-
-Prefer:
-
-1. Domain rule clarification
-2. Value Objects for page index / bbox index / extraction method
-3. Application orchestration
-4. UI delegation
-
-### WorkflowProgramming
-
-Prefer:
-
-1. graph definition invariants
-2. graph validation behavior
-3. execution application service
-4. infrastructure adapters for Python/SQL/export
 
 ## Approval Gate
 
