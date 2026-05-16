@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\" -Force)",
+      "Bash(Select-Object Mode, Name)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\" -Force)",
+      "Bash(git -C \"C:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\" log --oneline)",
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\\\\.claude\" -Recurse -Force | ForEach-Object { $_.FullName })",
+      "Bash(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\\\\plugins\\\\ddd-clean-migration\\\\skills\\\\init-migration\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Host \"Done\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\\\\plugins\\\\ddd-clean-migration\\\\skills\\\\init-migration\")",
+      "Read(//c/Users/rober/.claude/projects/c--Users-rober-Documents-Projects-legacy-to-ddd-migration-agents/memory/**)"
+    ]
+  }
+}

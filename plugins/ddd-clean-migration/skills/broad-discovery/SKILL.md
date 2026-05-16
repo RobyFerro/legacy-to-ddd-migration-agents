@@ -189,6 +189,23 @@ Create or update:
 - migration/00-system/bounded-context-catalog.yaml
 - migration/00-system/context-map.md
 
+## Roadmap Update
+
+After completing broad discovery, update the Roadmap if it exists (`migration/Roadmap.md` and `migration/Roadmap.yaml`):
+
+1. In `Roadmap.yaml`, set `roadmap.discovery.system_wide[0].status` to `done` and `date_completed` to today's date (YYYY-MM-DD).
+2. For each candidate Bounded Context identified with confidence >= Medium:
+   - Add an entry to `roadmap.discovery.bounded_contexts` with a `deep-discovery` task (status: `todo`) if not already present.
+   - Add an entry to `roadmap.design.bounded_contexts` with a `design-synthesis` task (status: `todo`) if not already present.
+   - Add an entry to `roadmap.develop.bounded_contexts` with `implementation` and `architecture-validation` tasks (status: `todo`) if not already present.
+3. In `Roadmap.md`:
+   - Mark `- [x] Broad Discovery` with the completion date in italics.
+   - Add `- [ ] Deep Discovery: [slug]` for each new BC under DISCOVERY > Bounded Contexts.
+   - Add `- [ ] Design Synthesis: [slug]` for each new BC under DESIGN > Bounded Contexts.
+   - Add `- [ ] Implementation: [slug]` and `- [ ] Architecture Validation: [slug]` for each new BC under DEVELOP > Bounded Contexts.
+
+If `migration/Roadmap.md` does not exist, skip this step and suggest running `init-migration` first.
+
 ## Constraints
 
 - Do not modify code.

@@ -252,6 +252,16 @@ Create or update:
 - migration/bounded-contexts/[slug]/02-design/design.md
 - migration/bounded-contexts/[slug]/02-design/model.yaml
 
+## Roadmap Update
+
+After completing design synthesis for a bounded context, update the Roadmap if it exists:
+
+1. In `migration/Roadmap.yaml`, find the entry for this BC slug under `roadmap.design.bounded_contexts`. Set the `design-synthesis` task `status` to `done` and `date_completed` to today's date.
+2. In `migration/Roadmap.md`, change `- [ ] Design Synthesis: [slug]` to `- [x] Design Synthesis: [slug] *(completed YYYY-MM-DD)*`.
+3. If this BC does not yet have entries in `roadmap.develop.bounded_contexts`, add `implementation` and `architecture-validation` tasks with status `todo` (they may have been added by broad-discovery already — do not duplicate).
+
+If `migration/Roadmap.md` does not exist, skip this step and suggest running `init-migration` first.
+
 ## Constraints
 
 - Do not implement code.

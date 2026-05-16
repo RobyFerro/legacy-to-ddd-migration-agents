@@ -205,6 +205,16 @@ If validation commands fail:
 5. Do not hide failed validation.
 6. Do not claim full success if build or tests failed.
 
+## Roadmap Update
+
+After completing architecture validation for a bounded context, update the Roadmap if it exists:
+
+1. In `migration/Roadmap.yaml`, find the `architecture-validation` task for this BC slug under `roadmap.develop.bounded_contexts`. Set `status` to `done` and `date_completed` to today's date.
+2. In `migration/Roadmap.md`, change `- [ ] Architecture Validation: [slug]` to `- [x] Architecture Validation: [slug] *(completed YYYY-MM-DD)*`.
+3. If all tasks across all BCs and all phases are now `done`, update `project.status` in `migration/migration-project.yaml` from `in-progress` to `completed`.
+
+If `migration/Roadmap.md` does not exist, skip this step and suggest running `init-migration` first.
+
 ## Safety Rules
 
 Do not modify code unless explicitly asked.

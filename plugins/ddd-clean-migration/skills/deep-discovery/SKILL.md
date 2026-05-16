@@ -167,6 +167,15 @@ Create or update:
 - migration/bounded-contexts/[bounded-context-slug]/01-discovery/discovery.md
 - migration/bounded-contexts/[bounded-context-slug]/01-discovery/discovery.yaml
 
+## Roadmap Update
+
+After completing deep discovery for a bounded context, update the Roadmap if it exists:
+
+1. In `migration/Roadmap.yaml`, find the entry for this BC slug under `roadmap.discovery.bounded_contexts`. Set the `deep-discovery` task `status` to `done` and `date_completed` to today's date.
+2. In `migration/Roadmap.md`, change `- [ ] Deep Discovery: [slug]` to `- [x] Deep Discovery: [slug] *(completed YYYY-MM-DD)*`.
+
+If `migration/Roadmap.md` does not exist, skip this step and suggest running `init-migration` first.
+
 ## Constraints
 
 - Do not design aggregates (that is DESIGN phase work — only identify candidates)

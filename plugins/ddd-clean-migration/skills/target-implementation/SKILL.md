@@ -171,6 +171,17 @@ Create or update:
 - migration/bounded-contexts/[slug]/03-develop/validation.md (build results, test results, risks)
 - New implementation files under migration/new-projects/[slug]/
 
+## Roadmap Update
+
+After completing a full BC implementation scope, update the Roadmap if it exists:
+
+1. In `migration/Roadmap.yaml`, find the `implementation` task for this BC slug under `roadmap.develop.bounded_contexts`. Set `status` to `done` and `date_completed` to today's date only when the full BC implementation is complete — not for partial scopes (e.g., a single aggregate).
+2. In `migration/Roadmap.md`, change `- [ ] Implementation: [slug]` to `- [x] Implementation: [slug] *(completed YYYY-MM-DD)*` when the BC is fully implemented.
+
+If only a partial scope was implemented, add a `notes` entry to the `implementation` task in `Roadmap.yaml` describing what was completed (e.g., `"Domain layer complete — Application and Infrastructure pending"`).
+
+If `migration/Roadmap.md` does not exist, skip this step and suggest running `init-migration` first.
+
 ## Constraints
 
 - Do not modify the legacy system (no writes). Reading the legacy source code for reference is required and encouraged.
