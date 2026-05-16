@@ -12,56 +12,95 @@ The plugin guides you through three phases:
 
 Legacy code is read-only evidence. The new system is built independently under `migration/new-projects/`.
 
+## Installation
+
+Install the plugin directly from the git repository via the Codex CLI:
+
+```bash
+codex plugin marketplace add RobyFerro/legacy-to-ddd-migration-agents
+```
+
+Or browse to the plugin in the Codex marketplace UI and use the Update/Sync option.
+
 ## Getting Started
 
-### Phase 1: Analyze the Legacy System
+Each migration phase has a dedicated skill. The prompts below are designed to be copy-pasted into Codex: they state your intent, give the skill the context it needs, and define what you expect back. Replace placeholders in `[brackets]` with your values, then adapt the rest as your situation requires.
 
-Start with the full codebase:
+### Step 0 — Initialize
 
-```
-Analyze this legacy repository to identify its main business areas,
-business rules, and domain boundaries.
-```
-
-After the first pass, go deeper on a specific area:
-
-```
-Analyze the [area name] in more detail. I want to understand its
-business flows, entities, rules, and dependencies.
+```text
+I'm starting a legacy-to-DDD migration of the system.
+Bootstrap the migration workspace, ask me for anything you need to know
+(project name, tech stack, modules I'm already aware of), and generate
+the Roadmap so we can track every phase from here.
 ```
 
-### Phase 2: Design the New System
+If the workspace already exists, the skill will detect it, infer the current state from existing artifacts, and resume without overwriting anything.
 
-Once discovery is complete for an area:
+### Phase 1 — Discovery
 
-```
-Design a DDD/Clean Architecture model for the [area] based on what was found.
-```
+Start with a system-wide pass to map the territory:
 
-### Phase 3: Build
-
-Once design is approved, implement one scope at a time:
-
-```
-Implement the domain model for [aggregate] — entities, value objects, and invariants.
+```text
+Start the discovery phase on this legacy codebase. I need a system-wide
+analysis that identifies the candidate bounded contexts, maps their
+relationships, and surfaces the main business rules — enough evidence
+for me to decide which contexts deserve a deeper look before design.
 ```
 
-```
-Implement the [use case name] use case in the application layer.
+Once the catalog is populated, dig into a specific bounded context:
+
+```text
+Go deeper on the [bc-slug] bounded context. I need its business flows,
+aggregate candidates, ubiquitous language, and any business rules hidden
+in the code. Flag domain ambiguities that need my input before we move
+to design.
 ```
 
-```
-Implement the repository adapter for [aggregate].
+### Phase 2 — Design
+
+```text
+Discovery is complete for [bc-slug]. Propose a pragmatic DDD + Clean
+Architecture design from the findings: aggregates, entities, value objects,
+repositories, ports, and the target layer for each business rule. Keep the
+model lean — call out risks where the evidence is thin instead of inventing
+certainty.
 ```
 
-Each phase produces artifacts under `migration/` that the next phase uses.
+### Phase 3 — Develop
+
+Open an implementation session for the bounded context:
+
+```text
+The design for [bc-slug] is approved — let's start building. Read the
+design, then propose the first scope to implement (an aggregate, a use
+case, or an adapter — whichever unblocks the most). Wait for my
+confirmation before writing any code.
+```
+
+Each session covers **one scope** — aggregate, use case, or adapter. Repeat until the bounded context is complete.
+
+After each significant scope, validate before moving on:
+
+```text
+Audit the latest implementation slice for [bc-slug] against Clean
+Architecture and DDD rules. Check layer boundaries, domain purity,
+behavior preservation against the legacy reference, and test coverage.
+Tell me explicitly if anything is broken or risky before I continue.
+```
+
+Each phase produces artifacts under `migration/` that the next phase consumes. The Roadmap is updated automatically at the end of each skill run.
 
 ## Artifacts
 
 ```
 migration/
+├── Roadmap.md                      ← Master TODO list (updated by each skill)
+├── Roadmap.yaml                    ← Machine-readable Roadmap
+├── migration-project.yaml          ← Project metadata and configuration
 ├── 00-system/
 │   ├── bounded-context-catalog.md
+│   ├── bounded-context-catalog.yaml
 │   └── context-map.md
 ├── bounded-contexts/
 │   └── [area-slug]/
@@ -77,6 +116,33 @@ migration/
             └── Presentation/
 ```
 
+## Roadmap
+
+The Roadmap is the central tracking artifact for the entire migration. It is created by `init-migration` and updated automatically by each phase skill.
+
+Example state after broad discovery on a system with two bounded contexts:
+
+```markdown
+## DISCOVERY
+### System-Wide
+- [x] Broad Discovery *(completed 2026-05-16)*
+### Bounded Contexts
+- [x] Deep Discovery: payments *(completed 2026-05-17)*
+- [ ] Deep Discovery: inventory
+
+## DESIGN
+### Bounded Contexts
+- [ ] Design Synthesis: payments
+- [ ] Design Synthesis: inventory
+
+## DEVELOP
+### Bounded Contexts
+- [ ] Implementation: payments
+- [ ] Architecture Validation: payments
+- [ ] Implementation: inventory
+- [ ] Architecture Validation: inventory
+```
+
 ## Principles
 
 - **Legacy is evidence, not remediation.** Read the legacy system to understand business intent. Never modify it.
@@ -87,17 +153,18 @@ migration/
 
 ## Skills Reference
 
-| Skill | Purpose |
-|---|---|
-| `broad-discovery` | Analyze the full legacy system for business area boundaries |
-| `deep-discovery` | Analyze one area in depth for aggregate and entity candidates |
-| `design-synthesis` | Design the target DDD/Clean model from discovery findings |
-| `target-implementation` | Build the new system based on design specifications |
-| `legacy-business-logic-extraction` | Find hidden business logic in code |
-| `ddd-aggregate-design` | Define DDD patterns (aggregates, entities, value objects) |
-| `clean-architecture-boundaries` | Classify responsibilities into layers |
-| `architecture-validation` | Audit code for layer boundary violations |
-| `migration-code-guardrails` | Enforce clean boundaries during implementation |
+| Skill | Phase | Purpose |
+| --- | --- | --- |
+| `init-migration` | Setup | Initialize workspace, create Roadmap, resume existing migration |
+| `broad-discovery` | Discovery | Analyze the full legacy system for business area boundaries |
+| `deep-discovery` | Discovery | Analyze one area in depth for aggregate and entity candidates |
+| `design-synthesis` | Design | Design the target DDD/Clean model from discovery findings |
+| `target-implementation` | Develop | Build the new system based on design specifications |
+| `architecture-validation` | Develop | Audit code for layer boundary violations |
+| `legacy-business-logic-extraction` | Discovery | Find hidden business logic in code |
+| `ddd-aggregate-design` | Design | Define DDD patterns (aggregates, entities, value objects) |
+| `clean-architecture-boundaries` | Design | Classify responsibilities into layers |
+| `migration-code-guardrails` | Develop | Enforce clean boundaries during implementation |
 
 ## License
 
