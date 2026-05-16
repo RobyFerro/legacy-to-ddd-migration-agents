@@ -1,6 +1,6 @@
 {
   "name": "ddd-clean-migration",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Reusable Codex workflow for broad-to-specific legacy-informed DDD/Clean Architecture discovery and target-system design.",
   "author": {
     "name": "Roberto Ferro",
