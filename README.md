@@ -1,4 +1,4 @@
-# DDD Clean Design Migration Plugin
+# Legacy to Enterprise AI Toolkit
 
 Analyze a legacy system and build a new DDD/Clean Architecture system from scratch — guided by what the legacy code reveals about business intent.
 
@@ -91,6 +91,18 @@ Tell me explicitly if anything is broken or risky before I continue.
 
 Each phase produces artifacts under `migration/` that the next phase consumes. The Roadmap is updated automatically at the end of each skill run.
 
+### Anytime — Where Am I?
+
+Whenever you lose context or you're unsure what to do next, ask for a status report:
+
+```text
+Give me a status check on this migration. Where am I, what should I do
+next, and is anything off-track? Flag any phase-gate violations or
+inconsistencies between the Roadmap and the actual artifacts.
+```
+
+The `next-step` skill reads the Roadmap and all artifacts, then returns a ranked list of next actions, warnings about phase-gate violations or stale state, and parallelization opportunities. It's read-only — it recommends but never modifies anything.
+
 ## Artifacts
 
 ```
@@ -156,6 +168,7 @@ Example state after broad discovery on a system with two bounded contexts:
 | Skill | Phase | Purpose |
 | --- | --- | --- |
 | `init-migration` | Setup | Initialize workspace, create Roadmap, resume existing migration |
+| `next-step` | Anytime | Analyze current state and recommend the next best action |
 | `broad-discovery` | Discovery | Analyze the full legacy system for business area boundaries |
 | `deep-discovery` | Discovery | Analyze one area in depth for aggregate and entity candidates |
 | `design-synthesis` | Design | Design the target DDD/Clean model from discovery findings |

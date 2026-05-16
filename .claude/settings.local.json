@@ -11,7 +11,8 @@
       "Bash(Write-Host \"Done\")",
       "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\\\\plugins\\\\ddd-clean-migration\\\\skills\\\\init-migration\")",
       "Read(//c/Users/rober/.claude/projects/c--Users-rober-Documents-Projects-legacy-to-ddd-migration-agents/memory/**)",
-      "WebSearch"
+      "WebSearch",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\rober\\\\Documents\\\\Projects\\\\legacy-to-ddd-migration-agents\\\\plugins\\\\ddd-clean-migration\\\\skills\\\\next-step\")"
     ]
   }
 }
